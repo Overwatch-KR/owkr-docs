@@ -66,6 +66,104 @@ main {
     flex: 1;
 }
 
+.home-hero h1,
+.home-notice h2,
+.section-heading h2,
+.rules-preview h2,
+.home-cta h2,
+.section-card h3,
+.doc-hero h1,
+.prose h2,
+.prose h3,
+.faq-group h2,
+.faq-item summary > span:first-child,
+.faq-assistant__identity h2,
+.faq-assistant__selected-question {
+    word-break: keep-all;
+    text-wrap: balance;
+}
+
+.home-hero__lead,
+.home-notice > p:not(.home-notice__label),
+.section-heading > p,
+.section-card p,
+.rules-preview > div > p:last-child,
+.rule-tags li,
+.doc-hero__description,
+.document-note,
+.prose p,
+.prose li,
+.prose blockquote,
+.faq-item__answer,
+.faq-assistant__identity p,
+.faq-assistant__bubble,
+.faq-assistant__question-list button span:first-child,
+.faq-assistant__answer,
+.faq-assistant__footer span,
+.site-footer p {
+    word-break: keep-all;
+    text-wrap: pretty;
+}
+
+.brand,
+.site-nav__link,
+.eyebrow,
+.eyebrow-link,
+.button,
+.home-notice__label,
+.home-notice > a,
+.section-card > span,
+.status-chip,
+.doc-meta span,
+.faq-categories a,
+.faq-assistant__trigger,
+.faq-assistant__categories button,
+.faq-assistant__back,
+.faq-assistant__restart,
+.faq-assistant__footer a,
+.site-footer nav a {
+    word-break: keep-all;
+    white-space: nowrap;
+}
+
+.prose :is(a, code),
+.faq-item__answer :is(a, code),
+.faq-assistant__answer :is(a, code) {
+    overflow-wrap: anywhere;
+}
+
+.prose code,
+.faq-item__answer code,
+.faq-assistant__answer code {
+    word-break: keep-all;
+}
+
+.prose pre,
+.faq-item__answer pre,
+.faq-assistant__answer pre {
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: pre;
+}
+
+.prose pre code,
+.faq-item__answer pre code,
+.faq-assistant__answer pre code {
+    overflow-wrap: normal;
+}
+
+.home-hero__copy,
+.section-heading > *,
+.home-cta__inner > *,
+.doc-hero__heading > div,
+.faq-item summary > span:first-child,
+.faq-assistant__identity,
+.faq-assistant__message-content,
+.faq-assistant__trigger-copy,
+.site-footer__inner > * {
+    min-width: 0;
+}
+
 .container {
     width: min(calc(100% - 3rem), var(--max-width));
     margin-inline: auto;
@@ -185,7 +283,7 @@ main {
 }
 
 .home-hero__lead {
-    max-width: 39rem;
+    max-width: 34rem;
     margin: 1.5rem 0 0;
     font-size: 1rem;
     line-height: 1.8;
@@ -309,7 +407,7 @@ main {
 
 .section-card-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.8rem;
 }
 
@@ -376,7 +474,7 @@ main {
 
 .rule-tags {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.55rem;
     margin: 0;
     padding: 0;
