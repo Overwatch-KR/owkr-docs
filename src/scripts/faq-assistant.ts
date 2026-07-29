@@ -306,7 +306,6 @@ const setupFaqAssistant = (root: HTMLElement) => {
 
         selectedCategoryButton = categoryButton;
         selectedQuestionButton = null;
-        appendUserMessage(category);
         categoryButtons.forEach((button) => {
             button.setAttribute('aria-pressed', String(button === categoryButton));
         });
