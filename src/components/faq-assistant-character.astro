@@ -1,0 +1,35 @@
+---
+interface Props {
+    size?: 'small' | 'medium';
+}
+
+const { size = 'medium' } = Astro.props;
+---
+
+<span
+    class:list={[
+        'faq-assistant-character',
+        `faq-assistant-character--${size}`,
+    ]}
+    aria-hidden="true"
+>
+    <svg viewBox="0 0 48 48" role="presentation" focusable="false">
+        <path class="faq-assistant-character__antenna" d="M24 10V6" />
+        <circle class="faq-assistant-character__signal" cx="24" cy="5" r="2.5" />
+        <rect
+            class="faq-assistant-character__face"
+            x="7"
+            y="10"
+            width="34"
+            height="30"
+            rx="11"
+        />
+        <g class="faq-assistant-character__expression">
+            <path class="faq-assistant-character__eye" d="M15.5 23h5" />
+            <path class="faq-assistant-character__eye" d="M27.5 23h5" />
+            <path class="faq-assistant-character__smile" d="M18.5 30c1.6 1.5 3.4 2.2 5.5 2.2s3.9-.7 5.5-2.2" />
+        </g>
+        <circle class="faq-assistant-character__cheek" cx="13" cy="28" r="1.5" />
+        <circle class="faq-assistant-character__cheek" cx="35" cy="28" r="1.5" />
+    </svg>
+</span>
