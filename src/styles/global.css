@@ -328,46 +328,77 @@ main {
     display: inline-flex;
     flex: 0 0 auto;
     align-items: center;
-    gap: 0.25rem;
-    padding: 0.55rem 0;
+    justify-content: center;
+    padding: 0;
     font: inherit;
-    font-size: 0.7rem;
-    font-weight: 650;
-    color: var(--text-muted);
     cursor: pointer;
     background: transparent;
     border: 0;
 }
 
-.theme-toggle [data-theme-option] {
+.theme-toggle__track {
     position: relative;
-    padding: 0.1rem 0;
+    display: flex;
+    width: 3.75rem;
+    height: 1.75rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem;
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    transition:
+        background-color 180ms ease,
+        border-color 180ms ease;
 }
 
-.theme-toggle [data-theme-option]::after {
+.theme-toggle__icon {
+    z-index: 1;
+    width: 0.9rem;
+    height: 0.9rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.5;
+    transition: color 260ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.theme-toggle__thumb {
     position: absolute;
-    right: 0;
-    bottom: -0.12rem;
-    left: 0;
-    height: 1px;
-    content: '';
-    background: currentColor;
-    transform: scaleX(0);
-    transition: transform 140ms ease;
+    top: -1px;
+    left: -1px;
+    width: 1.75rem;
+    height: 1.75rem;
+    background: var(--accent);
+    border-radius: 50%;
+    transform: translateX(0);
+    transition: transform 380ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-:root[data-theme='light'] .theme-toggle [data-theme-option='light'],
-:root[data-theme='dark'] .theme-toggle [data-theme-option='dark'] {
-    color: var(--text);
+:root[data-theme='light'] .theme-toggle__icon--light {
+    color: #fff;
 }
 
-:root[data-theme='light'] .theme-toggle [data-theme-option='light']::after,
-:root[data-theme='dark'] .theme-toggle [data-theme-option='dark']::after {
-    transform: scaleX(1);
+:root[data-theme='light'] .theme-toggle__icon--dark,
+:root[data-theme='dark'] .theme-toggle__icon--light {
+    color: var(--text-muted);
 }
 
-.theme-toggle:hover {
-    color: var(--text);
+:root[data-theme='dark'] .theme-toggle__icon--dark {
+    color: var(--bg);
+}
+
+:root[data-theme='dark'] .theme-toggle__thumb {
+    transform: translateX(2rem);
+}
+
+.theme-toggle:hover .theme-toggle__track {
+    border-color: var(--text-muted);
+}
+
+.theme-toggle:focus-visible {
+    outline-offset: 4px;
 }
 
 .eyebrow {
@@ -1681,6 +1712,7 @@ body.faq-assistant-open {
     }
 
     .site-header__inner {
+        position: relative;
         flex-direction: column;
         align-items: stretch;
         gap: 0;
@@ -1698,7 +1730,56 @@ body.faq-assistant-open {
     }
 
     .theme-toggle {
-        margin-left: auto;
+        position: absolute;
+        top: 0.65rem;
+        right: 0;
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+
+    .theme-toggle__track {
+        display: grid;
+        width: 2.25rem;
+        height: 2.25rem;
+        place-items: center;
+        padding: 0;
+        background: transparent;
+        border-color: transparent;
+        border-radius: 0.5rem;
+    }
+
+    .theme-toggle__icon {
+        grid-area: 1 / 1;
+        width: 1.1rem;
+        height: 1.1rem;
+        color: var(--text-muted) !important;
+        opacity: 0;
+        transform: scale(0.75) rotate(-16deg);
+        transition:
+            color 140ms ease,
+            opacity 160ms ease,
+            transform 180ms ease;
+    }
+
+    .theme-toggle__icon--dark {
+        transform: scale(0.75) rotate(16deg);
+    }
+
+    :root[data-theme='dark'] .theme-toggle__icon--light,
+    :root[data-theme='light'] .theme-toggle__icon--dark {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+    }
+
+    .theme-toggle__thumb {
+        display: none;
+    }
+
+    .theme-toggle:hover .theme-toggle__track,
+    .theme-toggle:focus-visible .theme-toggle__track {
+        color: var(--text);
+        background: var(--hover-bg);
+        border-color: var(--line);
     }
 
     .home-hero {

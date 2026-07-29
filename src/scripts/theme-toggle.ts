@@ -14,9 +14,10 @@ const getTheme = (): Theme =>
 const updateControls = (theme: Theme) => {
     document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((button) => {
         const nextTheme = theme === 'dark' ? 'light' : 'dark';
+        const label = `${nextTheme === 'light' ? '라이트' : '다크'} 테마로 전환`;
 
-        button.setAttribute('aria-pressed', String(theme === 'dark'));
-        button.setAttribute('aria-label', `${nextTheme === 'light' ? '라이트' : '다크'} 테마로 전환`);
+        button.setAttribute('aria-checked', String(theme === 'dark'));
+        button.title = label;
     });
 };
 
