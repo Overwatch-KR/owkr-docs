@@ -2,9 +2,9 @@
 title: 내전 공통 규칙
 description: 모두가 공정하고 쾌적하게 게임을 즐길 수 있도록 OWKR 내전 참가자가 지켜야 할 기준입니다.
 label: OFFICIAL RULES
-version: unreleased
+version: '1.0'
 updatedAt: 2026-07-29
-status: draft
+status: active
 ---
 
 > **핵심 원칙**

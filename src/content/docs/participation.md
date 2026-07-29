@@ -2,9 +2,9 @@
 title: 참가 안내
 description: 신청부터 게임 입장까지 놓치기 쉬운 준비 사항을 순서대로 확인하세요.
 label: PARTICIPATION GUIDE
-version: unreleased
+version: '1.0'
 updatedAt: 2026-07-29
-status: draft
+status: active
 ---
 
 ## 1. 신청하기 전에
