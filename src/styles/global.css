@@ -1153,10 +1153,11 @@ main {
 }
 
 .faq-assistant__bubble--bot {
+    padding: 0.25rem 0;
     color: var(--text-soft);
-    background: var(--surface-raised);
-    border: 1px solid var(--line);
-    border-radius: 0.2rem 0.7rem 0.7rem;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
 }
 
 .faq-assistant__bubble--user {
