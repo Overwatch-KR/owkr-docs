@@ -6,24 +6,26 @@ interface Props {
     title: string;
     description: string;
     label: string;
-    version: string;
     updatedAt: Date;
-    status: 'draft' | 'active' | 'archived';
     showSidebar?: boolean;
+    headings?: DocumentHeading[];
 }
 
-const { title, description, label, version, updatedAt, status, showSidebar = true } = Astro.props;
+interface DocumentHeading {
+    depth: number;
+    slug: string;
+    text: string;
+}
+
+const { title, description, label, updatedAt, showSidebar = true, headings = [] } = Astro.props;
 const formattedDate = new Intl.DateTimeFormat('ko-KR', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
 }).format(updatedAt);
-
-const statusLabels = {
-    draft: '초안',
-    active: '시행 중',
-    archived: '보관됨',
-};
+const sectionHeadings = headings.filter((heading) => heading.depth === 2);
+const showTableOfContents = showSidebar && sectionHeadings.length > 0;
+const getSectionLabel = (heading: DocumentHeading) => heading.text.replace(/^\d+\.\s*/, '');
 ---
 
 <BaseLayout title={title} description={description}>
@@ -36,23 +38,34 @@ const statusLabels = {
                     <h1>{title}</h1>
                     <p class="doc-hero__description">{description}</p>
                 </div>
-                <span class:list={['status-chip', `status-chip--${status}`]}>{statusLabels[status]}</span>
             </div>
             <div class="doc-meta" aria-label="문서 정보">
-                <span>{status === 'draft' ? '첫 배포 전 초안' : `버전 ${version}`}</span>
-                <span aria-hidden="true">·</span>
-                <span>최종 수정 {formattedDate}</span>
+                <span>최종 수정일: {formattedDate}</span>
             </div>
         </div>
     </section>
 
-    <div class:list={['container', 'document-grid', { 'document-grid--single': !showSidebar }]}>
+    <div
+        class:list={[
+            'container',
+            'document-grid',
+            { 'document-grid--single': !showTableOfContents },
+        ]}
+    >
         {
-            showSidebar && (
-                <aside class="document-note" aria-label="문서 안내">
-                    <p class="document-note__label">읽기 전에</p>
-                    <p>모든 참가자는 신청 전에 규칙을 확인해야 합니다.</p>
-                    <a href={withBase('/faq')}>애매한 상황은 FAQ에서 확인하기</a>
+            showTableOfContents && (
+                <aside class="document-toc" aria-label="문서 목차" data-document-toc>
+                    <p class="document-toc__label">이 문서에서</p>
+                    <nav>
+                        {sectionHeadings.map((heading, index) => (
+                            <a href={`#${heading.slug}`} data-document-toc-link={heading.slug}>
+                                <span aria-hidden="true">
+                                    {String(index + 1).padStart(2, '0')}
+                                </span>
+                                <span>{getSectionLabel(heading)}</span>
+                            </a>
+                        ))}
+                    </nav>
                 </aside>
             )
         }
@@ -60,4 +73,7 @@ const statusLabels = {
             <slot />
         </article>
     </div>
+    <script>
+        import '../scripts/document-toc';
+    </script>
 </BaseLayout>

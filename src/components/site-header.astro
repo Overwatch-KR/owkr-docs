@@ -23,21 +23,38 @@ const isActive = (href: string) => currentPath === withBase(href);
     <div class="container site-header__inner">
         <a class="brand" href={withBase('/')} aria-label="OWKR 내전 운영 가이드 홈">
             <strong>OWKR</strong>
-            <span>Docs</span>
+            <span>내전 가이드</span>
         </a>
 
-        <nav class="site-nav" aria-label="주요 메뉴">
-            {
-                navigation.map((item) => (
-                    <a
-                        href={withBase(item.href)}
-                        class:list={['site-nav__link', { 'is-active': isActive(item.href) }]}
-                        aria-current={isActive(item.href) ? 'page' : undefined}
-                    >
-                        {item.label}
-                    </a>
-                ))
-            }
-        </nav>
+        <div class="site-header__actions">
+            <nav class="site-nav" aria-label="주요 메뉴">
+                {
+                    navigation.map((item) => (
+                        <a
+                            href={withBase(item.href)}
+                            class:list={['site-nav__link', { 'is-active': isActive(item.href) }]}
+                            aria-current={isActive(item.href) ? 'page' : undefined}
+                        >
+                            {item.label}
+                        </a>
+                    ))
+                }
+            </nav>
+            <button
+                class="theme-toggle"
+                type="button"
+                aria-label="라이트 테마로 전환"
+                aria-pressed="true"
+                data-theme-toggle
+            >
+                <span data-theme-option="light">라이트</span>
+                <span aria-hidden="true">/</span>
+                <span data-theme-option="dark">다크</span>
+            </button>
+        </div>
     </div>
 </header>
+
+<script>
+    import '../scripts/theme-toggle';
+</script>
