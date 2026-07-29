@@ -25,7 +25,6 @@ const items = await Promise.all(
         <FaqAssistantCharacter size="small" />
         <span class="faq-assistant__trigger-copy">
             <strong>규칙 도우미</strong>
-            <span>궁금한 점 물어보기</span>
         </span>
     </button>
 
@@ -51,8 +50,7 @@ const items = await Promise.all(
             <div class="faq-assistant__profile">
                 <FaqAssistantCharacter size="small" />
                 <div class="faq-assistant__identity">
-                    <h2 id="faq-assistant-title">OWKR 규칙 도우미</h2>
-                    <p><span aria-hidden="true"></span> 바로 답변할게요</p>
+                    <h2 id="faq-assistant-title">규칙 도우미</h2>
                 </div>
             </div>
             <button
@@ -70,14 +68,16 @@ const items = await Promise.all(
                 class="faq-assistant__conversation"
                 aria-live="polite"
                 aria-label="규칙 도우미 대화"
+                data-assistant-conversation
             >
-                <div class="faq-assistant__message faq-assistant__message--bot">
+                <div
+                    class="faq-assistant__message faq-assistant__message--bot"
+                    data-assistant-initial-message
+                >
                     <FaqAssistantCharacter size="small" />
                     <div class="faq-assistant__message-content">
-                        <span class="faq-assistant__speaker">OWKR 도우미</span>
                         <div class="faq-assistant__bubble faq-assistant__bubble--bot">
-                            <p>안녕하세요! 내전 규칙에서 궁금한 내용을 함께 찾아드릴게요.</p>
-                            <p>먼저 확인하려는 주제를 골라 주세요.</p>
+                            <p>무엇이 궁금한가요?</p>
                         </div>
                     </div>
                 </div>
@@ -101,29 +101,12 @@ const items = await Promise.all(
                 </div>
 
                 <div
-                    class="faq-assistant__message faq-assistant__message--user"
-                    hidden
-                    data-assistant-category-message
-                >
-                    <div class="faq-assistant__bubble faq-assistant__bubble--user">
-                        <p data-assistant-selected-category></p>
-                    </div>
-                </div>
-
-                <div
-                    class="faq-assistant__message faq-assistant__message--bot"
+                    class="faq-assistant__message faq-assistant__message--bot faq-assistant__question-picker"
                     hidden
                     data-assistant-questions
                 >
                     <FaqAssistantCharacter size="small" />
                     <div class="faq-assistant__message-content">
-                        <span class="faq-assistant__speaker">OWKR 도우미</span>
-                        <div class="faq-assistant__bubble faq-assistant__bubble--bot">
-                            <p>
-                                <strong data-assistant-selected-category-label></strong> 관련
-                                질문이에요. 궁금한 내용을 골라 주세요.
-                            </p>
-                        </div>
                         <div
                             class="faq-assistant__question-list faq-assistant__quick-replies"
                             data-assistant-question-options
@@ -146,62 +129,71 @@ const items = await Promise.all(
                 </div>
 
                 <div
-                    class="faq-assistant__message faq-assistant__message--user"
-                    hidden
-                    data-assistant-question-message
-                >
-                    <div class="faq-assistant__bubble faq-assistant__bubble--user">
-                        <p
-                            class="faq-assistant__selected-question"
-                            data-assistant-selected-question
-                        >
-                        </p>
-                    </div>
-                </div>
-
-                <div
-                    class="faq-assistant__message faq-assistant__message--bot"
-                    hidden
-                    data-assistant-answer-view
-                >
-                    <FaqAssistantCharacter size="small" />
-                    <div class="faq-assistant__message-content">
-                        <span class="faq-assistant__speaker">OWKR 도우미</span>
-                        <div class="faq-assistant__bubble faq-assistant__bubble--bot">
-                            {
-                                items.map(({ entry, Content }) => (
-                                    <article
-                                        class="faq-assistant__answer"
-                                        data-assistant-answer={entry.id}
-                                        hidden
-                                    >
-                                        <Content />
-                                    </article>
-                                ))
-                            }
-                        </div>
-                    </div>
-                </div>
-
-                <div
                     class="faq-assistant__follow-ups faq-assistant__quick-replies"
                     hidden
                     data-assistant-follow-ups
                 >
                     <button class="faq-assistant__back" type="button" data-assistant-back>
-                        다른 질문 보기
+                        다른 질문
                     </button>
                     <button class="faq-assistant__restart" type="button" data-assistant-restart>
-                        주제 바꾸기
+                        다른 주제
                     </button>
                 </div>
+            </div>
+            <div class="faq-assistant__scroll-spacer" aria-hidden="true" data-assistant-spacer>
             </div>
         </div>
 
         <footer class="faq-assistant__footer">
-            <span>정식 규칙이 우선 적용됩니다.</span>
-            <a href={withBase('/rules')}>규칙 전문 보기</a>
+            <a href={withBase('/rules')}>전체 규칙</a>
         </footer>
+
+        <template data-assistant-user-template>
+            <div
+                class="faq-assistant__message faq-assistant__message--user"
+                data-assistant-turn
+                tabindex="-1"
+            >
+                <div class="faq-assistant__bubble faq-assistant__bubble--user">
+                    <p class="faq-assistant__selected-question" data-assistant-user-text></p>
+                </div>
+            </div>
+        </template>
+
+        <template data-assistant-response-template>
+            <div
+                class="faq-assistant__message faq-assistant__message--bot"
+                data-assistant-turn
+            >
+                <FaqAssistantCharacter size="small" />
+                <div class="faq-assistant__message-content">
+                    <div class="faq-assistant__bubble faq-assistant__bubble--bot">
+                        <div
+                            class="faq-assistant__typing"
+                            role="status"
+                            aria-label="답변 작성 중"
+                            data-assistant-typing
+                        >
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                            <span aria-hidden="true"></span>
+                        </div>
+                        <div hidden data-assistant-response-content></div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        {
+            items.map(({ entry, Content }) => (
+                <template data-assistant-answer-template={entry.id}>
+                    <article class="faq-assistant__answer">
+                        <Content />
+                    </article>
+                </template>
+            ))
+        }
     </section>
 </div>
 
