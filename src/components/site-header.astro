@@ -1,0 +1,44 @@
+---
+import { withBase } from '../lib/site';
+
+interface Props {
+    currentPath: string;
+}
+
+interface NavigationItem {
+    href: string;
+    label: string;
+}
+
+const { currentPath } = Astro.props;
+const navigation: NavigationItem[] = [
+    { href: '/rules', label: '내전 규칙' },
+    { href: '/faq', label: 'FAQ' },
+    { href: '/participation', label: '참가 안내' },
+    { href: '/changelog', label: '변경 이력' },
+];
+const isActive = (href: string) => currentPath === withBase(href);
+---
+
+<header class="site-header">
+    <div class="container site-header__inner">
+        <a class="brand" href={withBase('/')} aria-label="OWKR 내전 운영 가이드 홈">
+            <strong>OWKR</strong>
+            <span>Docs</span>
+        </a>
+
+        <nav class="site-nav" aria-label="주요 메뉴">
+            {
+                navigation.map((item) => (
+                    <a
+                        href={withBase(item.href)}
+                        class:list={['site-nav__link', { 'is-active': isActive(item.href) }]}
+                        aria-current={isActive(item.href) ? 'page' : undefined}
+                    >
+                        {item.label}
+                    </a>
+                ))
+            }
+        </nav>
+    </div>
+</header>

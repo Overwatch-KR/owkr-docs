@@ -1,0 +1,53 @@
+---
+import FaqAssistant from '../components/faq-assistant.astro';
+import SiteFooter from '../components/site-footer.astro';
+import SiteHeader from '../components/site-header.astro';
+import { withBase } from '../lib/site';
+import '../styles/global.css';
+
+interface Props {
+    title?: string;
+    description?: string;
+}
+
+const {
+    title = 'OWKR 내전 운영 가이드',
+    description = '모두가 공정하고 즐겁게 참여할 수 있도록 정리한 OWKR 내전 규칙과 참가 안내입니다.',
+} = Astro.props;
+
+const pageTitle = title === 'OWKR 내전 운영 가이드' ? title : `${title} | OWKR`;
+const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.url;
+---
+
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <meta name="theme-color" content="#090d16" />
+        <meta name="color-scheme" content="dark" />
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonicalUrl} />
+        <link rel="icon" href={withBase('/favicon.ico')} />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="ko_KR" />
+        <meta property="og:site_name" content="OWKR" />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta name="twitter:card" content="summary" />
+        <title>{pageTitle}</title>
+    </head>
+    <body>
+        <a class="skip-link" href="#main-content">본문으로 바로가기</a>
+        <div class="site-shell">
+            <SiteHeader currentPath={Astro.url.pathname} />
+            <main id="main-content">
+                <slot />
+            </main>
+            <SiteFooter />
+            <FaqAssistant />
+        </div>
+    </body>
+</html>

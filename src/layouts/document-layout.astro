@@ -1,0 +1,58 @@
+---
+import BaseLayout from './base-layout.astro';
+import { withBase } from '../lib/site';
+
+interface Props {
+    title: string;
+    description: string;
+    label: string;
+    version: string;
+    updatedAt: Date;
+    status: 'draft' | 'active' | 'archived';
+}
+
+const { title, description, label, version, updatedAt, status } = Astro.props;
+const formattedDate = new Intl.DateTimeFormat('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+}).format(updatedAt);
+
+const statusLabels = {
+    draft: '초안',
+    active: '시행 중',
+    archived: '보관됨',
+};
+---
+
+<BaseLayout title={title} description={description}>
+    <section class="doc-hero">
+        <div class="container doc-hero__inner">
+            <a class="eyebrow-link" href={withBase('/')}>OWKR 내전 운영 가이드</a>
+            <div class="doc-hero__heading">
+                <div>
+                    <p class="eyebrow">{label}</p>
+                    <h1>{title}</h1>
+                    <p class="doc-hero__description">{description}</p>
+                </div>
+                <span class:list={['status-chip', `status-chip--${status}`]}>{statusLabels[status]}</span>
+            </div>
+            <div class="doc-meta" aria-label="문서 정보">
+                <span>{status === 'draft' ? '첫 배포 전 초안' : `버전 ${version}`}</span>
+                <span aria-hidden="true">·</span>
+                <span>최종 수정 {formattedDate}</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="container document-grid">
+        <aside class="document-note" aria-label="문서 안내">
+            <p class="document-note__label">읽기 전에</p>
+            <p>모든 참가자는 신청 전에 규칙을 확인해야 합니다.</p>
+            <a href={withBase('/faq')}>애매한 상황은 FAQ에서 확인하기</a>
+        </aside>
+        <article class="prose">
+            <slot />
+        </article>
+    </div>
+</BaseLayout>

@@ -1,0 +1,84 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/base-layout.astro';
+import { withBase } from '../lib/site';
+
+const categoryOrder = ['참가', '게임 진행', '커뮤니케이션', '경고와 제재'] as const;
+const entries = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
+const items = await Promise.all(
+    entries.map(async (entry) => {
+        const { Content } = await render(entry);
+        return { entry, Content };
+    }),
+);
+
+const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: entries.map((entry) => ({
+        '@type': 'Question',
+        name: entry.data.question,
+        acceptedAnswer: {
+            '@type': 'Answer',
+            text: entry.body,
+        },
+    })),
+};
+---
+
+<BaseLayout
+    title="자주 묻는 질문"
+    description="OWKR 내전 규칙에서 헷갈리기 쉬운 상황을 질문과 답변으로 설명합니다."
+>
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+    <section class="doc-hero doc-hero--faq">
+        <div class="container doc-hero__inner">
+            <a class="eyebrow-link" href={withBase('/')}>OWKR 내전 운영 가이드</a>
+            <p class="eyebrow">FAQ</p>
+            <h1>자주 묻는 질문</h1>
+            <p class="doc-hero__description">
+                규칙의 경계가 애매할 때 먼저 확인해 주세요. 답변을 눌러 자세한 내용을 볼 수 있습니다.
+            </p>
+        </div>
+    </section>
+
+    <div class="container faq-layout">
+        <nav class="faq-categories" aria-label="FAQ 카테고리">
+            <p>카테고리</p>
+            {categoryOrder.map((category) => <a href={`#${category}`}>{category}</a>)}
+        </nav>
+
+        <div class="faq-groups">
+            {
+                categoryOrder.map((category) => {
+                    const categoryItems = items.filter((item) => item.entry.data.category === category);
+
+                    return (
+                        <section class="faq-group" aria-labelledby={category}>
+                            <div class="faq-group__heading">
+                                <p class="eyebrow">CATEGORY</p>
+                                <h2 id={category}>{category}</h2>
+                            </div>
+                            <div class="faq-list">
+                                {categoryItems.map(({ entry, Content }) => (
+                                    <details class="faq-item" id={`faq-${entry.id}`}>
+                                        <summary>
+                                            <span>{entry.data.question}</span>
+                                            <span class="faq-item__toggle" aria-hidden="true" />
+                                        </summary>
+                                        <div class="faq-item__answer">
+                                            <Content />
+                                        </div>
+                                    </details>
+                                ))}
+                            </div>
+                        </section>
+                    );
+                })
+            }
+        </div>
+    </div>
+    <script>
+        import '../scripts/faq-accordion';
+    </script>
+</BaseLayout>

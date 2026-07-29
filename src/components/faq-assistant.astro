@@ -1,0 +1,136 @@
+---
+import { getCollection, render } from 'astro:content';
+import { withBase } from '../lib/site';
+
+const CATEGORY_ORDER = ['참가', '게임 진행', '커뮤니케이션', '경고와 제재'] as const;
+const entries = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
+const items = await Promise.all(
+    entries.map(async (entry) => {
+        const { Content } = await render(entry);
+
+        return { entry, Content };
+    }),
+);
+---
+
+<div class="faq-assistant" data-faq-assistant data-state="closed">
+    <button
+        class="faq-assistant__trigger"
+        type="button"
+        aria-expanded="false"
+        aria-controls="faq-assistant-dialog"
+        data-assistant-trigger
+    >
+        <span class="faq-assistant__trigger-icon" aria-hidden="true">?</span>
+        <span>규칙 도우미</span>
+    </button>
+
+    <button
+        class="faq-assistant__backdrop"
+        type="button"
+        tabindex="-1"
+        aria-label="규칙 도우미 닫기"
+        data-assistant-close
+    ></button>
+
+    <section
+        class="faq-assistant__panel"
+        id="faq-assistant-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="faq-assistant-title"
+        aria-hidden="true"
+        inert
+        data-assistant-panel
+    >
+        <header class="faq-assistant__header">
+            <div class="faq-assistant__identity">
+                <h2 id="faq-assistant-title">규칙 도우미</h2>
+                <p>자주 묻는 질문을 빠르게 확인하세요.</p>
+            </div>
+            <button
+                class="faq-assistant__close"
+                type="button"
+                aria-label="규칙 도우미 닫기"
+                data-assistant-close
+            >
+                <span aria-hidden="true"></span>
+            </button>
+        </header>
+
+        <div class="faq-assistant__body" data-assistant-scroll>
+            <div data-assistant-welcome>
+                <p class="faq-assistant__intro">확인하려는 주제를 선택해 주세요.</p>
+
+                <div class="faq-assistant__categories" aria-label="FAQ 주제">
+                    {
+                        CATEGORY_ORDER.map((category) => (
+                            <button
+                                type="button"
+                                aria-pressed="false"
+                                data-assistant-category={category}
+                            >
+                                {category}
+                            </button>
+                        ))
+                    }
+                </div>
+
+                <div class="faq-assistant__questions" hidden data-assistant-questions>
+                    <p class="faq-assistant__section-label">궁금한 질문을 선택하세요</p>
+                    <div class="faq-assistant__question-list">
+                        {
+                            items.map(({ entry }) => (
+                                <button
+                                    type="button"
+                                    data-assistant-question={entry.id}
+                                    data-category={entry.data.category}
+                                    hidden
+                                >
+                                    <span>{entry.data.question}</span>
+                                    <span aria-hidden="true">→</span>
+                                </button>
+                            ))
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="faq-assistant__answer-view"
+                aria-live="polite"
+                hidden
+                data-assistant-answer-view
+            >
+                <h3 class="faq-assistant__selected-question" data-assistant-selected-question></h3>
+
+                {
+                    items.map(({ entry, Content }) => (
+                        <article
+                            class="faq-assistant__answer"
+                            data-assistant-answer={entry.id}
+                            hidden
+                        >
+                            <Content />
+                        </article>
+                    ))
+                }
+
+                <button class="faq-assistant__back" type="button" data-assistant-back>
+                    <span aria-hidden="true">←</span>
+                    다른 질문 보기
+                </button>
+            </div>
+        </div>
+
+        <footer class="faq-assistant__footer">
+            <a href={withBase('/faq')}>FAQ 전체 보기</a>
+            <span aria-hidden="true">·</span>
+            <a href={withBase('/rules')}>정식 규칙 보기</a>
+        </footer>
+    </section>
+</div>
+
+<script>
+    import '../scripts/faq-assistant';
+</script>
