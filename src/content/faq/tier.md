@@ -1,5 +1,5 @@
 ---
-question: 참가할 때 어떤 티어를 작성해야 하나요?
+question: 참가할 때 티어를 어떻게 작성해야 하나요?
 category: 참가
 order: 1
 ---

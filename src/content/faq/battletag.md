@@ -1,5 +1,5 @@
 ---
-question: 어떤 배틀태그를 작성해야 하나요?
+question: 어떤 계정의 배틀태그를 작성해야 하나요?
 category: 참가
 order: 2
 ---
