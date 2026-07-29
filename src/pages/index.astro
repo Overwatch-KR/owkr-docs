@@ -2,111 +2,47 @@
 import BaseLayout from '../layouts/base-layout.astro';
 import { withBase } from '../lib/site';
 
-const quickRules = [
-    '픽 강요',
-    '고의적 게임 방해',
-    '정치·비방',
-    '티배깅·조롱',
-    '위장 티어',
-    '괴롭힘 목적의 집중 저격',
-];
-
 const sections = [
     {
         title: '내전 규칙',
         description: '허용되는 플레이와 금지되는 행동, 경고 기준을 확인합니다.',
         href: '/rules',
-        link: '규칙 전체 보기',
     },
     {
         title: '자주 묻는 질문',
         description: '포커싱, 전술 콜, 밸런스 의견처럼 애매한 상황을 사례로 설명합니다.',
         href: '/faq',
-        link: 'FAQ 확인하기',
     },
     {
         title: '참가 안내',
         description: '신청부터 배틀태그 작성, 초대 설정, 불참 연락까지 한 번에 확인합니다.',
         href: '/participation',
-        link: '참가 절차 보기',
     },
 ];
 ---
 
 <BaseLayout>
-    <section class="home-hero">
-        <div class="container home-hero__grid">
-            <div class="home-hero__copy">
-                <p class="eyebrow">OWKR 내전 운영 가이드</p>
-                <h1>함께 즐기는 내전을 위한 규칙</h1>
-                <p class="home-hero__lead">
-                    원하는 영웅을 선택하고 진지하게 플레이할 자유. 그 자유가 모두에게 즐거운 경험이
-                    되도록 꼭 필요한 기준만 정리했습니다.
-                </p>
-                <div class="hero-actions">
-                    <a class="button button--primary" href={withBase('/rules')}>내전 규칙 확인</a>
-                    <a class="button button--secondary" href={withBase('/faq')}>궁금한 점 찾기</a>
-                </div>
-            </div>
+    <section class="home-index">
+        <div class="container home-index__inner">
+            <header class="home-index__header">
+                <p class="eyebrow">OWKR 내전 가이드</p>
+                <h1>내전 운영 문서</h1>
+                <p>규칙, 참가 절차, 자주 묻는 질문을 확인하세요.</p>
+            </header>
 
-            <aside class="home-notice" aria-label="경고 제도 핵심 안내">
-                <p class="home-notice__label">경고 안내</p>
-                <h2>누적 경고 3회부터 참여가 제한됩니다.</h2>
-                <p>
-                    중대한 위반은 누적 횟수와 관계없이 즉시 참여가 제한될 수 있습니다.
-                </p>
-                <a href={withBase('/faq#faq-warnings')}>경고 기준 확인하기</a>
-            </aside>
-        </div>
-    </section>
-
-    <section class="home-section">
-        <div class="container">
-            <div class="section-heading">
-                <div>
-                    <p class="eyebrow">문서 안내</p>
-                    <h2>필요한 내용을 확인하세요.</h2>
-                </div>
-                <p>규칙, FAQ, 참가 절차를 각각 분리했습니다.</p>
-            </div>
-
-            <div class="section-card-grid">
+            <nav class="home-index__links" aria-label="문서 바로가기">
                 {
                     sections.map((section) => (
-                        <a class="section-card" href={withBase(section.href)}>
-                            <h3>{section.title}</h3>
-                            <p>{section.description}</p>
-                            <span>{section.link} →</span>
+                        <a class="home-index__link" href={withBase(section.href)}>
+                            <div>
+                                <h2>{section.title}</h2>
+                                <p>{section.description}</p>
+                            </div>
+                            <span aria-hidden="true">→</span>
                         </a>
                     ))
                 }
-            </div>
-        </div>
-    </section>
-
-    <section class="home-section home-section--rules">
-        <div class="container rules-preview">
-            <div>
-                <p class="eyebrow">주요 금지 사항</p>
-                <h2>상대방이 불편함을 표현하면 멈춰 주세요.</h2>
-                <p>
-                    승리를 위한 정상적인 플레이와 전술적 소통은 허용됩니다. 특정 참가자를 괴롭히거나
-                    게임을 방해하는 행동은 허용되지 않습니다.
-                </p>
-            </div>
-            <ul class="rule-tags" aria-label="주요 금지 사항">
-                {quickRules.map((rule) => <li>{rule}</li>)}
-            </ul>
-        </div>
-    </section>
-
-    <section class="home-cta">
-        <div class="container home-cta__inner">
-            <div>
-                <p class="eyebrow">참가 전 확인</p>
-                <h2>시간, 배틀태그, 초대 설정을 확인했나요?</h2>
-            </div>
-            <a class="button button--primary" href={withBase('/participation')}>참가 준비 확인하기</a>
+            </nav>
         </div>
     </section>
 </BaseLayout>
