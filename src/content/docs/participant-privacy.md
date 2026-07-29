@@ -1,11 +1,10 @@
 ---
-title: 내전 참가자 개인정보 수집·이용 안내
-description: OWKR 서버 내전 운영을 위한 참가자 개인정보 수집·이용 기준을 안내합니다.
-label: PARTICIPANT PRIVACY
-version: '1.0'
+title: 개인정보처리방침
+description: OWKR 내전 참가자 개인정보의 수집·이용 및 관리 기준을 안내합니다.
+label: 개인정보 보호
+version: '1.1'
 updatedAt: 2026-07-29
 status: active
-showSidebar: false
 ---
 
 OWKR는 친목 목적의 Overwatch Discord 커뮤니티 서버입니다.
@@ -44,10 +43,10 @@ OWKR는 친목 목적의 Overwatch Discord 커뮤니티 서버입니다.
 
 참가자 정보는 OWKR 서버 내전 운영에 필요한 기간 동안 보관됩니다.
 
-다음에 해당하는 경우 정보를 삭제합니다.
+다만 다음에 해당하면 정보를 삭제할 수 있습니다.
 
 - 참가자가 삭제를 요청한 경우
-- OWKR 서버를 탈퇴한 경우
+- 최근 참가일로부터 3개월이 지난 경우
 - 내전 운영상 정보가 더 이상 필요하지 않은 경우
 
 브라우저에 임시 저장되는 개별 내전 명단과 팀 결과는 마지막 저장 후 최대 30분 동안 유지됩니다.
