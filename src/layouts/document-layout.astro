@@ -9,9 +9,10 @@ interface Props {
     version: string;
     updatedAt: Date;
     status: 'draft' | 'active' | 'archived';
+    showSidebar?: boolean;
 }
 
-const { title, description, label, version, updatedAt, status } = Astro.props;
+const { title, description, label, version, updatedAt, status, showSidebar = true } = Astro.props;
 const formattedDate = new Intl.DateTimeFormat('ko-KR', {
     year: 'numeric',
     month: 'long',
@@ -45,12 +46,16 @@ const statusLabels = {
         </div>
     </section>
 
-    <div class="container document-grid">
-        <aside class="document-note" aria-label="문서 안내">
-            <p class="document-note__label">읽기 전에</p>
-            <p>모든 참가자는 신청 전에 규칙을 확인해야 합니다.</p>
-            <a href={withBase('/faq')}>애매한 상황은 FAQ에서 확인하기</a>
-        </aside>
+    <div class:list={['container', 'document-grid', { 'document-grid--single': !showSidebar }]}>
+        {
+            showSidebar && (
+                <aside class="document-note" aria-label="문서 안내">
+                    <p class="document-note__label">읽기 전에</p>
+                    <p>모든 참가자는 신청 전에 규칙을 확인해야 합니다.</p>
+                    <a href={withBase('/faq')}>애매한 상황은 FAQ에서 확인하기</a>
+                </aside>
+            )
+        }
         <article class="prose">
             <slot />
         </article>

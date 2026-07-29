@@ -9,6 +9,7 @@ const documentSchema = z.object({
     version: z.string(),
     updatedAt: z.coerce.date(),
     status: z.enum(['draft', 'active', 'archived']).default('active'),
+    showSidebar: z.boolean().default(true),
 });
 
 const docs = defineCollection({

@@ -606,6 +606,15 @@ main {
     padding-bottom: 6rem;
 }
 
+.document-grid--single {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+}
+
+.document-grid--single .prose {
+    max-width: 680px;
+}
+
 .document-note {
     position: sticky;
     top: 6rem;
