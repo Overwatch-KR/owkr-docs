@@ -17,11 +17,6 @@ const docs = defineCollection({
     schema: documentSchema,
 });
 
-const changelog = defineCollection({
-    loader: glob({ pattern: 'CHANGELOG.md', base: '.' }),
-    schema: documentSchema,
-});
-
 const faq = defineCollection({
     loader: glob({ pattern: '**/*.md', base: './src/content/faq' }),
     schema: z.object({
@@ -31,4 +26,4 @@ const faq = defineCollection({
     }),
 });
 
-export const collections = { changelog, docs, faq };
+export const collections = { docs, faq };
