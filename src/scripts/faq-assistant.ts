@@ -2,6 +2,7 @@ export {};
 
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 const RESPONSE_DELAY_MS = 420;
+const TYPEWRITER_DELAY_MS = 18;
 const PANEL_EXIT_DURATION_MS = 220;
 
 const prefersReducedMotion = () => window.matchMedia(REDUCED_MOTION_QUERY).matches;
@@ -86,6 +87,7 @@ const setupFaqAssistant = (root: HTMLElement) => {
     let selectedCategoryButton: HTMLButtonElement | null = null;
     let selectedQuestionButton: HTMLButtonElement | null = null;
     let responseTimer: number | null = null;
+    let typewriterTimer: number | null = null;
     let resetTimer: number | null = null;
     let isResponding = false;
 
@@ -162,8 +164,77 @@ const setupFaqAssistant = (root: HTMLElement) => {
         responseTimer = null;
     };
 
+    const clearTypewriterTimer = () => {
+        if (typewriterTimer === null) {
+            return;
+        }
+
+        window.clearTimeout(typewriterTimer);
+        typewriterTimer = null;
+    };
+
+    const typewriteResponse = (content: HTMLElement, onComplete: () => void) => {
+        if (prefersReducedMotion()) {
+            onComplete();
+            return;
+        }
+
+        const textNodes: Array<{ node: Text; characters: string[] }> = [];
+        const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT);
+        let textNode = walker.nextNode();
+
+        while (textNode) {
+            const node = textNode as Text;
+            const value = node.nodeValue ?? '';
+
+            if (value.trim()) {
+                textNodes.push({ node, characters: Array.from(value) });
+                node.nodeValue = '';
+            }
+
+            textNode = walker.nextNode();
+        }
+
+        if (textNodes.length === 0) {
+            onComplete();
+            return;
+        }
+
+        content.setAttribute('aria-hidden', 'true');
+        let nodeIndex = 0;
+        let characterIndex = 0;
+
+        const writeNextCharacter = () => {
+            const currentNode = textNodes[nodeIndex];
+
+            if (!currentNode) {
+                typewriterTimer = null;
+                content.removeAttribute('aria-hidden');
+                onComplete();
+                return;
+            }
+
+            const character = currentNode.characters[characterIndex];
+
+            if (character) {
+                currentNode.node.nodeValue = `${currentNode.node.nodeValue ?? ''}${character}`;
+                characterIndex += 1;
+            }
+
+            if (characterIndex >= currentNode.characters.length) {
+                nodeIndex += 1;
+                characterIndex = 0;
+            }
+
+            typewriterTimer = window.setTimeout(writeNextCharacter, TYPEWRITER_DELAY_MS);
+        };
+
+        writeNextCharacter();
+    };
+
     const resetConversation = () => {
         clearResponseTimer();
+        clearTypewriterTimer();
         resetTimer = null;
         isResponding = false;
         selectedCategoryButton = null;
@@ -213,6 +284,7 @@ const setupFaqAssistant = (root: HTMLElement) => {
         panel.inert = true;
         document.body.classList.remove('faq-assistant-open');
         clearResponseTimer();
+        clearTypewriterTimer();
         isResponding = false;
         conversation.ariaBusy = 'false';
 
@@ -289,14 +361,15 @@ const setupFaqAssistant = (root: HTMLElement) => {
             () => {
                 response.typing.hidden = true;
                 response.content.hidden = false;
-                followUps.hidden = false;
-                conversation.append(followUps);
-                conversation.ariaBusy = 'false';
-                isResponding = false;
                 responseTimer = null;
-                animateEntrance(response.content, 6);
-                animateEntrance(followUps, 6);
-                alignQuestionAtTop(questionMessage, response.message);
+                typewriteResponse(response.content, () => {
+                    followUps.hidden = false;
+                    conversation.append(followUps);
+                    conversation.ariaBusy = 'false';
+                    isResponding = false;
+                    animateEntrance(followUps, 6);
+                    alignQuestionAtTop(questionMessage, response.message);
+                });
             },
             prefersReducedMotion() ? 0 : RESPONSE_DELAY_MS,
         );
