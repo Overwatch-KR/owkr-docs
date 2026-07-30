@@ -1,0 +1,22 @@
+---
+import { withBase } from '../lib/site';
+
+interface Props {
+    expression?: 'chat' | 'default' | 'loading' | 'search' | 'success';
+    size?: 'small' | 'medium';
+}
+
+const { expression = 'default', size = 'medium' } = Astro.props;
+---
+
+<span
+    class:list={['faq-assistant-mascot', `faq-assistant-mascot--${size}`]}
+    aria-hidden="true"
+>
+    <img
+        src={withBase(`/mascot/dou-${expression}.svg`)}
+        alt=""
+        data-assistant-mascot
+        data-success-src={withBase('/mascot/dou-success.svg')}
+    />
+</span>

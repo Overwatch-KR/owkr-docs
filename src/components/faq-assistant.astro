@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import { withBase } from '../lib/site';
-import FaqAssistantCharacter from './faq-assistant-character.astro';
+import FaqAssistantMascot from './faq-assistant-mascot.astro';
 
 const CATEGORY_ORDER = ['참가', '게임 진행', '커뮤니케이션', '경고와 제재'] as const;
 const entries = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
@@ -22,7 +22,7 @@ const items = await Promise.all(
         aria-controls="faq-assistant-dialog"
         data-assistant-trigger
     >
-        <FaqAssistantCharacter size="small" />
+        <FaqAssistantMascot size="small" />
         <span class="faq-assistant__trigger-copy">
             <strong>규칙 도우미</strong>
         </span>
@@ -48,7 +48,7 @@ const items = await Promise.all(
     >
         <header class="faq-assistant__header">
             <div class="faq-assistant__profile">
-                <FaqAssistantCharacter size="small" />
+                <FaqAssistantMascot size="small" />
                 <div class="faq-assistant__identity">
                     <h2 id="faq-assistant-title">규칙 도우미</h2>
                 </div>
@@ -74,7 +74,7 @@ const items = await Promise.all(
                     class="faq-assistant__message faq-assistant__message--bot"
                     data-assistant-initial-message
                 >
-                    <FaqAssistantCharacter size="small" />
+                    <FaqAssistantMascot expression="chat" size="small" />
                     <div class="faq-assistant__message-content">
                         <div class="faq-assistant__bubble faq-assistant__bubble--bot">
                             <p>무엇이 궁금하신가요?</p>
@@ -105,7 +105,7 @@ const items = await Promise.all(
                     hidden
                     data-assistant-questions
                 >
-                    <FaqAssistantCharacter size="small" />
+                    <FaqAssistantMascot expression="search" size="small" />
                     <div class="faq-assistant__message-content">
                         <div
                             class="faq-assistant__question-list faq-assistant__quick-replies"
@@ -166,7 +166,7 @@ const items = await Promise.all(
                 class="faq-assistant__message faq-assistant__message--bot"
                 data-assistant-turn
             >
-                <FaqAssistantCharacter size="small" />
+                <FaqAssistantMascot expression="loading" size="small" />
                 <div class="faq-assistant__message-content">
                     <div class="faq-assistant__bubble faq-assistant__bubble--bot">
                         <div

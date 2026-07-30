@@ -143,8 +143,9 @@ const setupFaqAssistant = (root: HTMLElement) => {
         const message = cloneTemplateRoot(responseTemplate);
         const typing = message?.querySelector<HTMLElement>('[data-assistant-typing]');
         const content = message?.querySelector<HTMLElement>('[data-assistant-response-content]');
+        const mascot = message?.querySelector<HTMLImageElement>('[data-assistant-mascot]');
 
-        if (!message || !typing || !content) {
+        if (!message || !typing || !content || !mascot) {
             return;
         }
 
@@ -152,7 +153,7 @@ const setupFaqAssistant = (root: HTMLElement) => {
         conversation.append(message);
         animateEntrance(message);
 
-        return { content, message, typing };
+        return { content, mascot, message, typing };
     };
 
     const clearResponseTimer = () => {
@@ -362,6 +363,11 @@ const setupFaqAssistant = (root: HTMLElement) => {
                 response.content.hidden = false;
                 responseTimer = null;
                 typewriteResponse(response.content, () => {
+                    const successSrc = response.mascot.dataset.successSrc;
+
+                    if (successSrc) {
+                        response.mascot.src = successSrc;
+                    }
                     followUps.hidden = false;
                     conversation.append(followUps);
                     conversation.ariaBusy = 'false';

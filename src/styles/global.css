@@ -18,8 +18,6 @@
     --section-bg: rgb(16 21 28 / 0.7);
     --hover-bg: rgb(255 255 255 / 0.025);
     --hero-sheen: rgb(255 255 255 / 0.012);
-    --assistant-character-bg: #101923;
-    --assistant-character-face: #10151e;
     --assistant-trigger-bg: rgb(22 28 37 / 0.96);
     --assistant-trigger-hover: #1c2430;
     --assistant-panel-bg: #10151c;
@@ -56,8 +54,6 @@
     --section-bg: rgb(239 242 245 / 0.72);
     --hover-bg: rgb(17 24 32 / 0.035);
     --hero-sheen: rgb(17 24 32 / 0.012);
-    --assistant-character-bg: #edf7fb;
-    --assistant-character-face: #ffffff;
     --assistant-trigger-bg: rgb(255 255 255 / 0.97);
     --assistant-trigger-hover: #f2f5f7;
     --assistant-panel-bg: #ffffff;
@@ -844,83 +840,26 @@ main {
     touch-action: manipulation;
 }
 
-.faq-assistant-character {
-    display: grid;
+.faq-assistant-mascot {
+    display: block;
     flex: 0 0 auto;
-    place-items: center;
-    color: var(--accent);
-    background: var(--assistant-character-bg);
-    border: 1px solid rgb(76 195 241 / 0.26);
-    border-radius: 0.65rem;
-    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.025);
 }
 
-.faq-assistant-character--small {
+.faq-assistant-mascot--small {
     width: 2.4rem;
     height: 2.4rem;
 }
 
-.faq-assistant-character--medium {
+.faq-assistant-mascot--medium {
     width: 3rem;
     height: 3rem;
 }
 
-.faq-assistant-character svg {
+.faq-assistant-mascot img {
+    display: block;
     width: 100%;
     height: 100%;
-    overflow: visible;
-}
-
-.faq-assistant-character__antenna,
-.faq-assistant-character__eye,
-.faq-assistant-character__smile {
-    fill: none;
-    stroke: currentColor;
-    stroke-linecap: round;
-}
-
-.faq-assistant-character__antenna {
-    stroke-width: 2;
-}
-
-.faq-assistant-character__signal {
-    fill: var(--accent-hover);
-    animation: faq-assistant-signal 2.4s ease-in-out infinite;
-}
-
-.faq-assistant-character__face {
-    fill: var(--assistant-character-face);
-    stroke: currentColor;
-    stroke-width: 2;
-}
-
-.faq-assistant-character__expression {
-    transform-box: fill-box;
-    transform-origin: center;
-}
-
-.faq-assistant-character__eye {
-    stroke-width: 2.8;
-}
-
-.faq-assistant-character__smile {
-    stroke: var(--accent-hover);
-    stroke-width: 1.8;
-}
-
-.faq-assistant-character__cheek {
-    fill: rgb(125 211 252 / 0.38);
-}
-
-@keyframes faq-assistant-signal {
-    0%,
-    100% {
-        opacity: 0.55;
-    }
-
-    50% {
-        opacity: 1;
-    }
+    object-fit: contain;
 }
 
 .faq-assistant__trigger {
