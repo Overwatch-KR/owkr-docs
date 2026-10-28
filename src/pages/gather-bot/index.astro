@@ -1,0 +1,27 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../../layouts/base-layout.astro';
+import { withBase } from '../../lib/site';
+import { getPolicyDocuments, formatPolicyDate } from '../../lib/policies';
+import '../../styles/policy.css';
+const entry = await getEntry('docs', 'gather-bot');
+if (!entry) throw new Error('봇 정책 안내를 찾을 수 없습니다.');
+const { Content } = await render(entry);
+const documents = await getPolicyDocuments();
+---
+<BaseLayout title={entry.data.title} description={entry.data.description} section="bot">
+    <div class="container policy-home">
+        <header class="policy-home__hero">
+            <div><p class="policy-eyebrow">OWKR Discord 내전 운영 봇</p><h1>시간을달리는소녀<br /><span>정책과 이용 안내</span></h1><p class="policy-home__lead">궁금한 내용을 바로 찾아보세요.<br />이용 조건부터 개인정보, 문의 방법까지 한곳에 모았습니다.</p></div>
+            <div class="policy-clock" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="45"/><path d="M60 15v7m45 38h-7M60 105v-7M15 60h7M60 34v26l17 12"/><circle cx="60" cy="60" r="3"/></svg><span>당신의 내전 시간을 함께</span></div>
+            <dl class="policy-dates policy-home__dates"><div><dt>최초 발행일</dt><dd>{entry.data.publishedAt && formatPolicyDate(entry.data.publishedAt)}</dd></div><div><dt>최근 갱신일</dt><dd>{formatPolicyDate(entry.data.updatedAt)}</dd></div></dl>
+        </header>
+        <section aria-labelledby="policy-documents-title">
+            <div class="policy-section-heading"><h2 id="policy-documents-title">어떤 안내가 필요하신가요?</h2><span>문서별로 바로 확인하세요</span></div>
+            <div class="policy-cards">{documents.map(({ slug, title, summary, action, entry: document }, index) => <a class="policy-card" href={withBase(`/gather-bot/${slug}`)}><div class="policy-card__top"><span class="policy-card__number">0{index + 1}</span><span class:list={['policy-status', { 'policy-status--draft': document.data.status === 'draft' }]}>{document.data.status === 'draft' ? '검토 중 초안' : '시행 중'}</span></div><h3>{title}</h3><p>{summary}</p><span class="policy-card__action">{action}<span aria-hidden="true">↗</span></span><small>최근 갱신 {formatPolicyDate(document.data.updatedAt)} · v{document.data.version}</small></a>)}</div>
+            <p class="policy-status-note">이용약관은 시행 중입니다. 개인정보처리방침·요청 안내는 검토 중인 초안이며, 약관 동의가 개인정보 처리 동의를 대신하지 않습니다.</p>
+        </section>
+        <section class="policy-help" aria-labelledby="policy-help-title"><div><p class="policy-eyebrow">문의·오류 신고</p><h2 id="policy-help-title">도움이 필요하신가요?</h2><p>개인정보가 포함된 문의는 공개 채널 대신<br />운영 담당자에게 비공개로 보내 주세요.</p></div><div class="policy-help__contact"><a href="mailto:qtaghdi@gmail.com">이메일로 문의하기 <span aria-hidden="true">↗</span></a><span>qtaghdi@gmail.com</span><span>Discord 비공개 메시지 · qtaghdi</span></div></section>
+        <section class="policy-about"><div><h2>이 안내는 봇 이용에 관한 문서입니다.</h2><div class="policy-about__copy"><Content /></div></div><a href={withBase('/participant-privacy')}>참가자·팀 밸런스 개인정보 안내 ↗</a></section>
+    </div>
+</BaseLayout>

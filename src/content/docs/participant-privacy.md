@@ -7,7 +7,7 @@ updatedAt: 2026-10-28
 status: active
 ---
 
-Discord 모집 봇의 처리는 [Gather Bot 정책·지원 안내](/owkr-docs/gather-bot)에서 별도로 안내합니다. 이 문서는 참가자 정보와 Balance 서비스의 처리 기준입니다.
+Discord 모집 봇의 처리는 [시간을달리는소녀 정책·지원 안내](/owkr-docs/gather-bot)에서 별도로 안내합니다. 이 문서는 참가자 정보와 Balance 서비스의 처리 기준입니다.
 
 OWKR는 친목 목적의 Overwatch Discord 커뮤니티 서버입니다.
 

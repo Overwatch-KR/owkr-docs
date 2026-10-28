@@ -1,12 +1,12 @@
 ---
 import { getCollection, render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
-import DocumentLayout from '../../layouts/document-layout.astro';
+import PolicyLayout from '../../layouts/policy-layout.astro';
 
 export async function getStaticPaths() {
-    const entries = await getCollection('docs', ({ id }) => id === 'gather-bot' || id.startsWith('gather-bot/'));
+    const entries = await getCollection('docs', ({ id }) => id.startsWith('gather-bot/'));
     return entries.map((entry) => ({
-        params: { document: entry.id === 'gather-bot' ? undefined : entry.id.slice('gather-bot/'.length) },
+        params: { document: entry.id.slice('gather-bot/'.length) },
         props: { entry },
     }));
 }
@@ -19,6 +19,6 @@ const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
 ---
 
-<DocumentLayout {...entry.data} headings={headings}>
+<PolicyLayout {...entry.data} slug={entry.id.slice('gather-bot/'.length)} headings={headings}>
     <Content />
-</DocumentLayout>
+</PolicyLayout>

@@ -7,6 +7,7 @@ const documentSchema = z.object({
     description: z.string(),
     label: z.string(),
     version: z.string(),
+    publishedAt: z.coerce.date().optional(),
     updatedAt: z.coerce.date(),
     status: z.enum(['draft', 'active', 'archived']).default('active'),
     showSidebar: z.boolean().default(true),
