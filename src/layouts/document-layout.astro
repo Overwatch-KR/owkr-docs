@@ -3,6 +3,7 @@ import BaseLayout from './base-layout.astro';
 import { withBase } from '../lib/site';
 
 interface Props {
+    status?: 'draft' | 'active' | 'archived';
     title: string;
     description: string;
     label: string;
@@ -17,7 +18,7 @@ interface DocumentHeading {
     text: string;
 }
 
-const { title, description, label, updatedAt, showSidebar = true, headings = [] } = Astro.props;
+const { status = 'active', title, description, label, updatedAt, showSidebar = true, headings = [] } = Astro.props;
 const formattedDate = new Intl.DateTimeFormat('ko-KR', {
     year: 'numeric',
     month: 'long',
@@ -28,7 +29,7 @@ const showTableOfContents = showSidebar && sectionHeadings.length > 0;
 const getSectionLabel = (heading: DocumentHeading) => heading.text.replace(/^\d+\.\s*/, '');
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} noindex={status === 'draft'}>
     <section class="doc-hero">
         <div class="container doc-hero__inner">
             <a class="eyebrow-link" href={withBase('/')}>OWKR 내전 운영 가이드</a>
@@ -40,6 +41,7 @@ const getSectionLabel = (heading: DocumentHeading) => heading.text.replace(/^\d+
                 </div>
             </div>
             <div class="doc-meta" aria-label="문서 정보">
+                {status === 'draft' && <strong>검토 중 초안 · 시행일 미정</strong>}
                 <span>최종 수정일: {formattedDate}</span>
             </div>
         </div>

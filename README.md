@@ -43,3 +43,11 @@ FAQ를 추가하려면 `src/content/faq`에 Markdown 파일을 만들고 `questi
 - [내전 규정](https://github.com/Overwatch-KR/owkr-docs) · 규정, 참가 안내와 FAQ
 - [관리자 시험](https://github.com/Overwatch-KR/owkr-exam) · 내전 관리자 시험 웹
 - [내전 워크샵](https://github.com/Overwatch-KR/owkr-scrim-workshop) · 준비 중인 OverPy 소스
+
+## Gather Bot 정책
+
+봇 정책·약관·문의 안내의 유일한 원본은 `src/content/docs/gather-bot/`입니다.
+[공개 안내](https://overwatch-kr.github.io/owkr-docs/gather-bot)와 기존 참가자 개인정보 안내는 처리 범위를 구분합니다.
+검토 중 초안 표시와 noindex를 유지하며, 최종 정책으로 확정하지 않습니다.
+비공개 배포 대상인 검토 기록·공개 준비 목록은 [관리 안내](docs/gather-bot/README.md)를 따릅니다.
+봇의 수집·보관·운영 정책 변경 시 두 저장소의 관련 PR을 연결합니다.

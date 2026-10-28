@@ -2,10 +2,12 @@
 title: 개인정보처리방침
 description: OWKR 내전 참가자 개인정보의 수집·이용 및 관리 기준을 안내합니다.
 label: 개인정보 보호
-version: '1.1'
-updatedAt: 2026-07-29
+version: '1.2'
+updatedAt: 2026-10-28
 status: active
 ---
+
+Discord 모집 봇의 처리는 [Gather Bot 정책·지원 안내](/owkr-docs/gather-bot)에서 별도로 안내합니다. 이 문서는 참가자 정보와 Balance 서비스의 처리 기준입니다.
 
 OWKR는 친목 목적의 Overwatch Discord 커뮤니티 서버입니다.
 

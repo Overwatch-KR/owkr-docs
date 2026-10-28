@@ -62,3 +62,12 @@ Consult the official Astro guides before changing related functionality:
 - [Content collections](https://docs.astro.build/en/guides/content-collections/)
 - [Styles and CSS](https://docs.astro.build/en/guides/styling/)
 - [Internationalization](https://docs.astro.build/en/guides/internationalization/)
+
+## Gather Bot policies
+
+- `src/content/docs/gather-bot` is the canonical source for bot public policies.
+- Keep participant/Balance and Gather Bot processing scopes distinct.
+- Preserve draft status until unresolved review items are explicitly resolved.
+- Review notes in `docs/gather-bot` must not be included in public site output.
+- Coordinate collection/retention/operating policy changes with the bot repository and link PRs.
+- Split independent implementation units into passing commits and preserve them when merging (no squash by default).
