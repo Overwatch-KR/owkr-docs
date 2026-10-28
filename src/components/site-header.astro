@@ -1,11 +1,8 @@
 ---
-import { Image } from 'astro:assets';
-import botIcon from '../assets/bot-icon.png';
 import { withBase } from '../lib/site';
 
 interface Props {
     currentPath: string;
-    section?: 'community' | 'bot';
 }
 
 interface NavigationItem {
@@ -13,12 +10,8 @@ interface NavigationItem {
     label: string;
 }
 
-const { currentPath, section = 'community' } = Astro.props;
-const isBot = section === 'bot';
-const navigation: NavigationItem[] = isBot ? [
-    { href: '/gather-bot', label: '봇 정책·지원' },
-    { href: '/', label: 'OWKR 내전 가이드 ↗' },
-] : [
+const { currentPath } = Astro.props;
+const navigation: NavigationItem[] = [
     { href: '/rules', label: '내전 규칙' },
     { href: '/faq', label: 'FAQ' },
     { href: '/participation', label: '참가 안내' },
@@ -33,10 +26,9 @@ const isActive = (href: string) => {
 
 <header class="site-header">
     <div class="container site-header__inner">
-        <a class:list={['brand', { 'brand--bot': isBot }]} href={withBase(isBot ? '/gather-bot' : '/')} aria-label={isBot ? '시간을달리는소녀 정책·지원 홈' : 'OWKR 내전 운영 가이드 홈'}>
-            {isBot && <Image class="bot-brand-icon" src={botIcon} alt="" width={32} height={32} format="webp" />}
-            <strong>{isBot ? '시간을달리는소녀' : 'OWKR'}</strong>
-            <span>{isBot ? '정책·지원' : '내전 가이드'}</span>
+        <a class="brand" href={withBase('/')} aria-label="OWKR 내전 운영 가이드 홈">
+            <strong>OWKR</strong>
+            <span>내전 가이드</span>
         </a>
 
         <div class="site-header__actions">

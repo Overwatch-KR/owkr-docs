@@ -1,0 +1,18 @@
+---
+interface Props {
+    headings: { depth: number; slug: string; text: string }[];
+}
+const sections = Astro.props.headings.filter((heading) => heading.depth === 2);
+---
+{sections.length > 0 && <aside class="document-toc" aria-label="문서 목차" data-document-toc>
+    <p class="document-toc__label">이 문서에서</p>
+    <nav>
+        {sections.map((heading, index) => <a href={`#${heading.slug}`} data-document-toc-link={heading.slug}>
+            <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+            <span>{heading.text.replace(/^\d+\.\s*/, '')}</span>
+        </a>)}
+    </nav>
+</aside>}
+<script>
+    import '../scripts/document-toc';
+</script>
