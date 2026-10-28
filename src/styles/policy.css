@@ -34,12 +34,10 @@
 .policy-about__copy { max-width: 650px; color: var(--text-muted); font-size: 0.76rem; line-height: 1.8; }
 .policy-about__copy p { margin: 0; }
 .policy-about > a { align-self: start; color: var(--text-soft); font-size: 0.76rem; line-height: 1.8; text-decoration: underline; text-underline-offset: 0.2em; }
-.policy-navigation { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 2rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--line); }
-.policy-navigation a { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; padding: 0.8rem; color: var(--text-muted); border-radius: 0.35rem; font-size: 0.86rem; }
-.policy-navigation a span { opacity: 0; }
-.policy-navigation a:hover { color: var(--text); background: var(--hover-bg); }
-.policy-navigation a[aria-current='page'] { color: var(--accent); background: var(--accent-soft); font-weight: 700; }
-.policy-navigation a[aria-current='page'] span { opacity: 1; }
+.policy-navigation { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; margin-bottom: 2rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--line); }
+.policy-navigation a { padding-block: 0.65rem; color: var(--text-muted); font-size: 0.86rem; text-decoration-thickness: 1px; text-underline-offset: 0.4em; }
+.policy-navigation a:hover, .policy-navigation a:focus-visible { color: var(--text); text-decoration-line: underline; }
+.policy-navigation a[aria-current='page'] { color: var(--accent); text-decoration-line: underline; }
 .policy-reading { min-width: 0; max-width: 780px; }
 .policy-back { display: inline-block; margin-bottom: 1.8rem; color: var(--text-muted); font-size: 0.78rem; }
 .policy-back:hover { color: var(--accent); }
@@ -63,9 +61,8 @@
     .policy-card > p { min-height: 0; }
     .policy-card__action { margin-top: 1.2rem; }
     .policy-clock { flex-basis: 170px; padding-inline: 0; }
-    .policy-navigation { display: flex; flex-wrap: wrap; gap: 0.3rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--line); }
-    .policy-navigation a { padding: 0.65rem; font-size: 0.78rem; }
-    .policy-navigation a span { display: none; }
+    .policy-navigation { column-gap: 1.25rem; }
+    .policy-navigation a { font-size: 0.78rem; }
     .policy-reading { max-width: none; }
     .policy-back { margin-bottom: 1.2rem; }
 }
