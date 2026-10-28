@@ -4,6 +4,7 @@ description: 시간을달리는소녀의 문의·삭제 요청 안내입니다. 
 label: 시간을달리는소녀 정책 · 검토 중 초안
 version: '0.2'
 publishedAt: 2026-10-27
+changeSummary: "봇 이름을 시간을달리는소녀로 통일하고 발행·갱신 날짜를 표시했습니다. 이용 조건과 보관 기준은 바뀌지 않았습니다."
 updatedAt: 2026-10-28
 status: draft
 ---

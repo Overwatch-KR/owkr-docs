@@ -37,6 +37,7 @@ const sections = headings.filter((heading) => heading.depth === 2);
                     <div><dt>최근 갱신일</dt><dd><time datetime={updatedAt.toISOString()}>{formatPolicyDate(updatedAt)}</time></dd></div>
                     <div><dt>버전</dt><dd>{version}</dd></div>
                 </dl>
+                <a class="policy-history-link" href={withBase(`/gather-bot/changes#${slug}`)}>이 문서의 변경 내용 비교 →</a>
             </header>
             <details class="policy-toc"><summary>이 문서의 목차 <span>{sections.length}개 항목</span></summary><nav aria-label="본문 목차">{sections.map((heading) => <a href={`#${heading.slug}`}>{heading.text}</a>)}</nav></details>
             <article class="prose policy-prose"><slot /></article>

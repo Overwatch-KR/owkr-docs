@@ -16,6 +16,7 @@ const currentYear = new Date().getFullYear();
             <a href={withBase('/participant-privacy')}>참가자 개인정보처리방침</a>
             <a href={withBase('/gather-bot')}>시간을달리는소녀 정책·지원</a>
             {section === 'bot' && <a href={withBase('/gather-bot/support')}>문의·삭제 요청</a>}
+            {section === 'bot' && <a href={withBase('/gather-bot/changes')}>변경 이력</a>}
         </nav>
     </div>
 </footer>

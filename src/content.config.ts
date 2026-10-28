@@ -9,6 +9,7 @@ const documentSchema = z.object({
     version: z.string(),
     publishedAt: z.coerce.date().optional(),
     updatedAt: z.coerce.date(),
+    changeSummary: z.string().optional(),
     status: z.enum(['draft', 'active', 'archived']).default('active'),
     showSidebar: z.boolean().default(true),
 });
@@ -27,4 +28,17 @@ const faq = defineCollection({
     }),
 });
 
-export const collections = { docs, faq };
+const policyRevisions = defineCollection({
+    loader: glob({ pattern: '*.md', base: './src/content/policy-revisions' }),
+    schema: z.object({
+        document: z.enum(['terms', 'privacy', 'support']),
+        publishedAt: z.coerce.date(),
+        order: z.number().int().positive(),
+        label: z.string(),
+        status: z.enum(['draft', 'active']),
+        summary: z.string(),
+        sourceUrl: z.url(),
+    }),
+});
+
+export const collections = { docs, faq, policyRevisions };

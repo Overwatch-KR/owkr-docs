@@ -3,7 +3,7 @@ import { withBase } from '../lib/site';
 import { POLICY_LINKS } from '../lib/policies';
 interface Props { current?: string; }
 const { current = '' } = Astro.props;
-const links = [{ slug: '', title: '안내 홈' }, ...POLICY_LINKS];
+const links = [{ slug: '', title: '안내 홈' }, ...POLICY_LINKS, { slug: 'changes', title: '문서 변경 이력' }];
 ---
 <nav class="policy-navigation" aria-label="봇 정책 문서">
     {links.map((link) => <a href={withBase(`/gather-bot${link.slug ? `/${link.slug}` : ''}`)} aria-current={current === link.slug ? 'page' : undefined}>{link.title}<span aria-hidden="true">↗</span></a>)}

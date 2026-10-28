@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/base-layout.astro';
+import PolicyNavigation from '../../components/policy-navigation.astro';
+import { withBase } from '../../lib/site';
+import { getPolicyDocuments, formatPolicyDate } from '../../lib/policies';
+import { diffPolicyLines, policyDiffContext } from '../../lib/policy-diff';
+import '../../styles/policy.css';
+
+const documents = await getPolicyDocuments();
+const snapshots = await getCollection('policyRevisions');
+const groups = documents.map((document) => {
+    const archived = snapshots.filter((snapshot) => snapshot.data.document === document.slug).sort((a, b) => a.data.order - b.data.order);
+    if (!archived.length) throw new Error(`이전 공개 버전 누락: ${document.slug}`);
+    const revisions: { label: string; date: Date; status: 'draft' | 'active' | 'archived'; summary: string; sourceUrl: string; body: string }[] = archived.map((snapshot) => ({
+        label: snapshot.data.label, date: snapshot.data.publishedAt, status: snapshot.data.status,
+        summary: snapshot.data.summary, sourceUrl: snapshot.data.sourceUrl, body: snapshot.body?.trim() ?? '',
+    }));
+    revisions.push({
+        label: `현재 문서 · v${document.entry.data.version}`, date: document.entry.data.updatedAt, status: document.entry.data.status,
+        summary: document.entry.data.changeSummary ?? '이전 공개 버전과 현재 문서를 비교합니다.',
+        sourceUrl: `https://github.com/Overwatch-KR/owkr-docs/blob/main/src/content/docs/gather-bot/${document.slug}.md`,
+        body: document.entry.body?.trim() ?? '',
+    });
+    return { ...document, revisions: revisions.map((revision, index) => {
+        const previous = revisions[index - 1];
+        const diff = diffPolicyLines(previous?.body ?? '', revision.body);
+        return { ...revision, previous: previous?.label ?? '공개 이전', lines: policyDiffContext(diff), added: diff.filter((line) => line.kind === 'added').length, removed: diff.filter((line) => line.kind === 'removed').length };
+    }).reverse() };
+});
+---
+<BaseLayout title="시간을달리는소녀 문서 변경 이력" description="봇 정책의 발행 기록과 이전 문구·바뀐 문구를 비교합니다." noindex section="bot">
+    <div class="container policy-document">
+        <aside class="policy-sidebar"><p class="policy-eyebrow">정책·지원</p><PolicyNavigation current="changes" /></aside>
+        <div class="policy-reading">
+            <a class="policy-back" href={withBase('/gather-bot')}>← 모든 안내 보기</a>
+            <header class="policy-document__header"><p class="policy-eyebrow">시간을달리는소녀</p><h1>문서 변경 이력</h1><p>언제, 어떤 내용이 바뀌었는지 확인하세요.<br />이전 공개 문서와 바뀐 문구를 나란한 행으로 비교합니다.</p><dl class="policy-dates"><div><dt>이 페이지 최초 발행일</dt><dd>2026년 10월 28일</dd></div><div><dt>최근 갱신일</dt><dd>2026년 10월 28일</dd></div></dl></header>
+            <p class="policy-status-note">문서의 최초 발행일은 초안을 포함해 처음 공개된 날짜이며 약관 시행일과는 다릅니다. 과거 초안은 현재 정책이 아닙니다. 이 페이지는 주요 공개 버전의 본문을 비교하며, 화면·메타데이터만 바뀌면 본문 차이가 없을 수 있습니다.</p>
+            <nav class="policy-history-jump" aria-label="문서별 변경 이력">{groups.map((group) => <a href={`#${group.slug}`}>{group.title} ↓</a>)}</nav>
+            {groups.map((group) => <section class="policy-history-group" id={group.slug} aria-labelledby={`history-${group.slug}`}>
+                <div class="policy-section-heading"><h2 id={`history-${group.slug}`}>{group.title}</h2><a href={withBase(`/gather-bot/${group.slug}`)}>현재 문서 읽기 ↗</a></div>
+                {group.revisions.map((revision, index) => <details class="policy-revision" open={index === 0}>
+                    <summary><span><time datetime={revision.date.toISOString()}>{formatPolicyDate(revision.date)}</time><strong>{revision.label}</strong><span class="policy-revision__stage">{revision.status === 'draft' ? '초안' : '확정본'}</span></span><span class="policy-diff-count"><span>+{revision.added}줄</span><span>−{revision.removed}줄</span></span></summary>
+                    <div class="policy-revision__intro"><p>{revision.summary}</p><small>{revision.previous} → {revision.label}</small><a href={revision.sourceUrl}>공개 원문 기록 ↗</a></div>
+                    {revision.added + revision.removed === 0 ? <p class="policy-diff-empty">본문 변경 없음 · 명칭·문서 정보·화면 표시를 정리했습니다.</p> : <div class="policy-diff" role="region" aria-label={`${group.title} 변경 문구 비교`} tabindex="0"><div class="policy-diff-legend"><span>− 삭제된 문구</span><span>+ 추가된 문구</span><span>행 번호: 이전 / 이후</span></div><ol>{revision.lines.map((line) => line === null ? <li class="policy-diff-gap">⋯ 동일한 문구 생략</li> : <li class:list={['policy-diff-line', `policy-diff-line--${line.kind}`]}><span class="policy-diff-number" aria-hidden="true">{line.before ?? ''}</span><span class="policy-diff-number" aria-hidden="true">{line.after ?? ''}</span><span class="policy-diff-kind">{line.kind === 'added' ? '+ 추가' : line.kind === 'removed' ? '− 삭제' : '문맥'}</span><span class="policy-diff-text">{line.text || ' '}</span></li>)}</ol></div>}
+                </details>)}
+            </section>)}
+        </div>
+    </div>
+</BaseLayout>

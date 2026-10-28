@@ -4,6 +4,7 @@ description: 시간을달리는소녀의 서비스 이용 조건과 운영자·�
 label: 시간을달리는소녀 이용약관 · 확정본
 version: '1.0.1'
 publishedAt: 2026-10-27
+changeSummary: "봇 이름을 시간을달리는소녀로 통일하고 발행·갱신 날짜를 표시했습니다. 이용 조건과 보관 기준은 바뀌지 않았습니다."
 updatedAt: 2026-10-28
 status: active
 ---
