@@ -106,3 +106,9 @@
 
 .policy-home__hero { flex-wrap: wrap; }
 .policy-home__dates { flex-basis: 100%; margin: 0; padding-bottom: 0; border-bottom: 0; }
+
+.bot-brand-icon { flex: 0 0 auto; border-radius: 50%; }
+.brand--bot { gap: 0.5rem; }
+.policy-home__hero { position: relative; isolation: isolate; }
+.policy-home__hero::before { position: absolute; z-index: -1; inset: -2rem -1rem 2rem; content: ''; background: radial-gradient(ellipse at 90% 35%, var(--accent-soft), transparent 65%); pointer-events: none; }
+.policy-clock img { width: 180px; height: 180px; border-radius: 50%; box-shadow: 0 0 65px var(--accent-soft); }

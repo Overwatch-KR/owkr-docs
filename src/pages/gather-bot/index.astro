@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import botIcon from '../../assets/bot-icon.png';
 import { getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/base-layout.astro';
 import { withBase } from '../../lib/site';
@@ -13,7 +15,7 @@ const documents = await getPolicyDocuments();
     <div class="container policy-home">
         <header class="policy-home__hero">
             <div><p class="policy-eyebrow">OWKR Discord 내전 운영 봇</p><h1>시간을달리는소녀<br /><span>정책과 이용 안내</span></h1><p class="policy-home__lead">궁금한 내용을 바로 찾아보세요.<br />이용 조건부터 개인정보, 문의 방법까지 한곳에 모았습니다.</p></div>
-            <div class="policy-clock" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="45"/><path d="M60 15v7m45 38h-7M60 105v-7M15 60h7M60 34v26l17 12"/><circle cx="60" cy="60" r="3"/></svg><span>당신의 내전 시간을 함께</span></div>
+            <div class="policy-clock"><Image src={botIcon} alt="시간을달리는소녀 봇 아이콘" width={180} height={180} format="webp" loading="eager" fetchpriority="high" /><span>당신의 내전 시간을 함께</span></div>
             <dl class="policy-dates policy-home__dates"><div><dt>최초 발행일</dt><dd>{entry.data.publishedAt && formatPolicyDate(entry.data.publishedAt)}</dd></div><div><dt>최근 갱신일</dt><dd>{formatPolicyDate(entry.data.updatedAt)}</dd></div></dl>
         </header>
         <section aria-labelledby="policy-documents-title">
