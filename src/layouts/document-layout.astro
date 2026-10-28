@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './base-layout.astro';
+import DocumentToc from '../components/document-toc.astro';
 import { withBase } from '../lib/site';
 
 interface Props {
@@ -26,7 +27,6 @@ const formattedDate = new Intl.DateTimeFormat('ko-KR', {
 }).format(updatedAt);
 const sectionHeadings = headings.filter((heading) => heading.depth === 2);
 const showTableOfContents = showSidebar && sectionHeadings.length > 0;
-const getSectionLabel = (heading: DocumentHeading) => heading.text.replace(/^\d+\.\s*/, '');
 ---
 
 <BaseLayout title={title} description={description} noindex={status === 'draft'}>
@@ -56,26 +56,11 @@ const getSectionLabel = (heading: DocumentHeading) => heading.text.replace(/^\d+
     >
         {
             showTableOfContents && (
-                <aside class="document-toc" aria-label="문서 목차" data-document-toc>
-                    <p class="document-toc__label">이 문서에서</p>
-                    <nav>
-                        {sectionHeadings.map((heading, index) => (
-                            <a href={`#${heading.slug}`} data-document-toc-link={heading.slug}>
-                                <span aria-hidden="true">
-                                    {String(index + 1).padStart(2, '0')}
-                                </span>
-                                <span>{getSectionLabel(heading)}</span>
-                            </a>
-                        ))}
-                    </nav>
-                </aside>
+                <DocumentToc headings={headings} />
             )
         }
         <article class="prose">
             <slot />
         </article>
     </div>
-    <script>
-        import '../scripts/document-toc';
-    </script>
 </BaseLayout>
