@@ -1,7 +1,8 @@
 ---
 import { getCollection, render } from 'astro:content';
+import DocumentHeader from '../components/document-header.astro';
+import DocumentToc from '../components/document-toc.astro';
 import BaseLayout from '../layouts/base-layout.astro';
-import { withBase } from '../lib/site';
 
 const categoryOrder = ['참가', '게임 진행', '커뮤니케이션', '경고와 제재'] as const;
 const entries = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
@@ -31,22 +32,9 @@ const faqSchema = {
     description="OWKR 내전 규칙에서 헷갈리기 쉬운 상황을 질문과 답변으로 설명합니다."
 >
     <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
-    <section class="doc-hero doc-hero--faq">
-        <div class="container doc-hero__inner">
-            <a class="eyebrow-link" href={withBase('/')}>OWKR 내전 운영 가이드</a>
-            <p class="eyebrow">FAQ</p>
-            <h1>자주 묻는 질문</h1>
-            <p class="doc-hero__description">
-                규칙의 경계가 애매할 때 먼저 확인해 주세요. 답변을 눌러 자세한 내용을 볼 수 있습니다.
-            </p>
-        </div>
-    </section>
-
-    <div class="container faq-layout">
-        <nav class="faq-categories" aria-label="FAQ 카테고리">
-            <p>카테고리</p>
-            {categoryOrder.map((category) => <a href={`#${category}`}>{category}</a>)}
-        </nav>
+    <DocumentHeader title="자주 묻는 질문" description="규칙의 경계가 애매할 때 먼저 확인해 주세요. 답변을 눌러 자세한 내용을 볼 수 있습니다." label="자주 묻는 질문" />
+    <div class="container document-grid">
+        <DocumentToc headings={categoryOrder.map((category) => ({ depth: 2, slug: category, text: category }))} />
 
         <div class="faq-groups">
             {
@@ -61,12 +49,12 @@ const faqSchema = {
                             </div>
                             <div class="faq-list">
                                 {categoryItems.map(({ entry, Content }) => (
-                                    <details class="faq-item" id={`faq-${entry.id}`}>
+                                    <details data-accordion class="faq-item" id={`faq-${entry.id}`}>
                                         <summary>
                                             <span>{entry.data.question}</span>
                                             <span class="faq-item__toggle" aria-hidden="true" />
                                         </summary>
-                                        <div class="faq-item__answer">
+                                        <div data-accordion-content class="faq-item__answer">
                                             <Content />
                                         </div>
                                     </details>
@@ -78,7 +66,4 @@ const faqSchema = {
             }
         </div>
     </div>
-    <script>
-        import '../scripts/faq-accordion';
-    </script>
 </BaseLayout>

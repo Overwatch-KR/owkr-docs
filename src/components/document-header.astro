@@ -1,0 +1,32 @@
+---
+import { withBase } from '../lib/site';
+import { formatPolicyDate } from '../lib/policies';
+interface Props {
+    title: string;
+    description: string;
+    label: string;
+    status?: 'draft' | 'active' | 'archived';
+    version?: string;
+    publishedAt?: Date;
+    updatedAt?: Date;
+    historyHref?: string;
+}
+const { title, description, label, status, version, publishedAt, updatedAt, historyHref } = Astro.props;
+const statusLabel = status === 'draft' ? '검토 중 초안' : status === 'archived' ? '이전 문서' : '현재 문서';
+---
+<section class="doc-hero">
+    <div class="container doc-hero__inner">
+        {Astro.slots.has('navigation') ? <slot name="navigation" /> : <a class="eyebrow-link" href={withBase('/')}>OWKR 내전 가이드</a>}
+        <header class="document-header">
+            <div class="document-header__label"><p class="eyebrow">{label}</p>{status && <span class:list={['document-status', { 'document-status--draft': status === 'draft' }]}>{statusLabel}</span>}</div>
+            <h1>{title}</h1>
+            <p class="doc-hero__description">{description}</p>
+            {(publishedAt || updatedAt || version) && <dl class="document-meta" aria-label="문서 정보">
+                {publishedAt && <div><dt>최초 발행일</dt><dd><time datetime={publishedAt.toISOString()}>{formatPolicyDate(publishedAt)}</time></dd></div>}
+                {updatedAt && <div><dt>최근 갱신일</dt><dd><time datetime={updatedAt.toISOString()}>{formatPolicyDate(updatedAt)}</time></dd></div>}
+                {version && <div><dt>버전</dt><dd>{version}</dd></div>}
+            </dl>}
+            {historyHref && <a class="document-history-link" href={historyHref}>이 문서의 변경 내용 비교 →</a>}
+        </header>
+    </div>
+</section>

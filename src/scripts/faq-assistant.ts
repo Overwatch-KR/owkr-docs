@@ -1,11 +1,6 @@
-export {};
-
-const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
+import { motionOptions, prefersReducedMotion } from '../lib/motion';
 const RESPONSE_DELAY_MS = 420;
 const TYPEWRITER_DELAY_MS = 18;
-const PANEL_EXIT_DURATION_MS = 220;
-
-const prefersReducedMotion = () => window.matchMedia(REDUCED_MOTION_QUERY).matches;
 
 const animateEntrance = (element: HTMLElement, distance = 8) => {
     if (prefersReducedMotion()) {
@@ -17,10 +12,7 @@ const animateEntrance = (element: HTMLElement, distance = 8) => {
             { opacity: 0, transform: `translateY(${distance}px)` },
             { opacity: 1, transform: 'translateY(0)' },
         ],
-        {
-            duration: 240,
-            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-        },
+        motionOptions(),
     );
 };
 
@@ -292,7 +284,7 @@ const setupFaqAssistant = (root: HTMLElement) => {
         if (prefersReducedMotion()) {
             resetConversation();
         } else {
-            resetTimer = window.setTimeout(resetConversation, PANEL_EXIT_DURATION_MS);
+            resetTimer = window.setTimeout(resetConversation, Number(motionOptions().duration));
         }
 
         (lastFocusedElement ?? trigger).focus();

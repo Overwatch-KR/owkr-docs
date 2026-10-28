@@ -75,3 +75,9 @@ Consult the official Astro guides before changing related functionality:
 - Preserve `publishedAt` when moving or editing public policies; update `updatedAt`, `version`, and `changeSummary` for actual revisions.
 - Before changing an already published policy, preserve its prior public body and status in `src/content/policy-revisions`, with an immutable GitHub source URL and a unique per-document order. Do not rewrite historical wording or publish internal review notes.
 - Keep the public `/gather-bot/changes` comparison linked from policy pages and record policy revisions in `CHANGELOG.md`.
+
+## Shared visual conventions
+
+- Use DocumentHeader and DocumentToc for document pages, including bot policies and FAQ. Keep the global guide header, footer, and OWKR favicon consistent.
+- Reuse global typography, color, width, radius, and motion tokens. Use the shared accordion for disclosures; respect reduced motion.
+- Keep revision comparisons in labelled previous/current/status/text columns, including on mobile. Do not hide number columns or use color as the only change indicator.

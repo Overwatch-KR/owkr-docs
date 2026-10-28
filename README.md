@@ -55,3 +55,9 @@ FAQ를 추가하려면 `src/content/faq`에 Markdown 파일을 만들고 `questi
 봇 정책 화면은 `src/pages/gather-bot`, `src/layouts/policy-layout.astro`, `src/styles/policy.css`에서 관리합니다. 최초 발행일·갱신일은 문서 메타데이터를 사용하고 기존 `/gather-bot` 주소를 유지합니다.
 
 문서 헤더는 전체 페이지가 공유합니다. 공통 규칙·참가 안내·개인정보 안내와 봇 정책·변경 이력은 `src/components/document-toc.astro`의 번호 목차와 현재 항목 강조를 함께 사용합니다. 봇 안내 홈의 아이콘·카드와 정책 문서의 날짜 표시는 유지합니다.
+
+## 화면 공통 규격
+
+일반 문서·봇 정책·FAQ는 `document-header.astro`와 `document-toc.astro`를 공유합니다. 제목·본문 크기, 문서 폭(940px), 날짜 표시, 색상과 동작 속도는 `global.css`의 공통 변수로 관리합니다. 전체 페이지의 헤더·푸터·OWKR 파비콘은 동일하며, 봇 아이콘은 봇 안내 홈의 콘텐츠로만 사용합니다. 최초 발행일을 확인하지 못한 문서는 날짜를 추정하지 않고 갱신일만 표시합니다.
+
+FAQ와 변경 이력의 펼침 동작은 `scripts/accordion.ts`를 함께 사용하며 CSS의 240ms 규격과 동작 줄이기 설정을 따릅니다. CSS 호버는 160ms이며 위치·크기 이동 대신 색상과 밑줄로 표시합니다. 변경 비교는 이전·이후·변경·문구의 네 열을 유지하고 모바일에서도 행 번호를 숨기지 않습니다.
