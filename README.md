@@ -53,3 +53,5 @@ FAQ를 추가하려면 `src/content/faq`에 Markdown 파일을 만들고 `questi
 봇의 수집·보관·운영 정책 변경 시 두 저장소의 관련 PR을 연결합니다.
 
 봇 정책 화면은 `src/pages/gather-bot`, `src/layouts/policy-layout.astro`, `src/styles/policy.css`에서 관리합니다. 최초 발행일·갱신일은 문서 메타데이터를 사용하고 기존 `/gather-bot` 주소를 유지합니다.
+
+문서 헤더는 전체 페이지가 공유합니다. 공통 규칙·참가 안내·개인정보 안내와 봇 정책·변경 이력은 `src/components/document-toc.astro`의 번호 목차와 현재 항목 강조를 함께 사용합니다. 봇 안내 홈의 아이콘·카드와 정책 문서의 날짜 표시는 유지합니다.
