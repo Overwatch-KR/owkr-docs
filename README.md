@@ -48,6 +48,8 @@ FAQ를 추가하려면 `src/content/faq`에 Markdown 파일을 만들고 `questi
 
 봇 정책·약관·문의 안내의 유일한 원본은 `src/content/docs/gather-bot/`입니다.
 [공개 안내](https://overwatch-kr.github.io/owkr-docs/gather-bot)와 기존 참가자 개인정보 안내는 처리 범위를 구분합니다.
-이용약관은 2026년 10월 28일 시행하는 1.0 확정본입니다. 개인정보처리방침·지원 안내는 초안 표시와 noindex를 유지합니다.
+시간을달리는소녀 이용약관은 2026년 10월 28일 시행하는 확정본입니다. 개인정보처리방침·지원 안내는 초안 표시와 noindex를 유지합니다.
 비공개 배포 대상인 검토 기록·공개 준비 목록은 [관리 안내](docs/gather-bot/README.md)를 따릅니다.
 봇의 수집·보관·운영 정책 변경 시 두 저장소의 관련 PR을 연결합니다.
+
+봇 정책 화면은 `src/pages/gather-bot`, `src/layouts/policy-layout.astro`, `src/styles/policy.css`에서 관리합니다. 최초 발행일·갱신일은 문서 메타데이터를 사용하고 기존 `/gather-bot` 주소를 유지합니다.

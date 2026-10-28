@@ -1,8 +1,10 @@
 ---
-title: Gather Bot 개인정보처리방침
-description: OWKR Gather Bot의 개인정보처리방침입니다. 현재 검토 중인 초안입니다.
-label: Gather Bot 정책 · 검토 중 초안
-version: '0.2'
+title: 시간을달리는소녀 개인정보처리방침
+description: 시간을달리는소녀의 개인정보처리방침입니다. 현재 검토 중인 초안입니다.
+label: 시간을달리는소녀 정책 · 검토 중 초안
+version: '0.3'
+publishedAt: 2026-10-27
+changeSummary: "봇 이름을 시간을달리는소녀로 통일하고 발행·갱신 날짜를 표시했습니다. 이용 조건과 보관 기준은 바뀌지 않았습니다."
 updatedAt: 2026-10-28
 status: draft
 ---
@@ -28,7 +30,7 @@ status: draft
 
 ## 처리 목적과 정보
 
-OWKR Gather Bot은 Discord 내전 모집, 참가·대기자 관리, 티어 제출 연결,
+시간을달리는소녀은 Discord 내전 모집, 참가·대기자 관리, 티어 제출 연결,
 시작 전 대기실 안내와 재시작 복구를 지원합니다.
 
 | 정보 | 목적 |

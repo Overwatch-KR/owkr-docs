@@ -1,18 +1,22 @@
 ---
 import { withBase } from '../lib/site';
 
+interface Props { section?: 'community' | 'bot'; }
+const { section = 'community' } = Astro.props;
 const currentYear = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
     <div class="container site-footer__inner">
         <div>
-            <p class="site-footer__brand">OWKR</p>
+            <p class="site-footer__brand">{section === 'bot' ? '시간을달리는소녀 · OWKR' : 'OWKR'}</p>
             <p>© {currentYear} OWKR · 서로를 존중하는 즐거운 내전을 만듭니다.</p>
         </div>
         <nav aria-label="하단 메뉴">
             <a href={withBase('/participant-privacy')}>참가자 개인정보처리방침</a>
-            <a href={withBase('/gather-bot')}>봇 정책·지원</a>
+            <a href={withBase('/gather-bot')}>시간을달리는소녀 정책·지원</a>
+            {section === 'bot' && <a href={withBase('/gather-bot/support')}>문의·삭제 요청</a>}
+            {section === 'bot' && <a href={withBase('/gather-bot/changes')}>변경 이력</a>}
         </nav>
     </div>
 </footer>

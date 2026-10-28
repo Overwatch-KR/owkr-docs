@@ -1,0 +1,47 @@
+---
+import BaseLayout from './base-layout.astro';
+import PolicyNavigation from '../components/policy-navigation.astro';
+import { withBase } from '../lib/site';
+import { formatPolicyDate, POLICY_LINKS } from '../lib/policies';
+import '../styles/policy.css';
+interface Props {
+    slug: string;
+    title: string;
+    description: string;
+    status: 'draft' | 'active' | 'archived';
+    version: string;
+    publishedAt?: Date;
+    updatedAt: Date;
+    headings: { depth: number; slug: string; text: string }[];
+}
+const { slug, title, description, status, version, publishedAt, updatedAt, headings } = Astro.props;
+if (!publishedAt) throw new Error(`최초 발행일 누락: ${slug}`);
+const shortTitle = POLICY_LINKS.find((link) => link.slug === slug)?.title ?? title;
+const sections = headings.filter((heading) => heading.depth === 2);
+---
+<BaseLayout title={title} description={description} noindex={status === 'draft'} section="bot">
+    <div class="container policy-document">
+        <aside class="policy-sidebar">
+            <p class="policy-eyebrow">정책·지원</p>
+            <PolicyNavigation current={slug} />
+            <p class="policy-sidebar__help">도움이 필요하신가요?<br /><a href="mailto:qtaghdi@gmail.com">이메일로 문의하기 ↗</a></p>
+        </aside>
+        <div class="policy-reading">
+            <a class="policy-back" href={withBase('/gather-bot')}>← 모든 안내 보기</a>
+            <header class="policy-document__header">
+                <div class="policy-heading-row"><p class="policy-eyebrow">시간을달리는소녀</p><span class:list={['policy-status', { 'policy-status--draft': status === 'draft' }]}>{status === 'draft' ? '검토 중 초안' : '시행 중'}</span></div>
+                <h1>{shortTitle}</h1>
+                <p>{description}</p>
+                <dl class="policy-dates">
+                    <div><dt>최초 발행일</dt><dd><time datetime={publishedAt.toISOString()}>{formatPolicyDate(publishedAt)}</time></dd></div>
+                    <div><dt>최근 갱신일</dt><dd><time datetime={updatedAt.toISOString()}>{formatPolicyDate(updatedAt)}</time></dd></div>
+                    <div><dt>버전</dt><dd>{version}</dd></div>
+                </dl>
+                <a class="policy-history-link" href={withBase(`/gather-bot/changes#${slug}`)}>이 문서의 변경 내용 비교 →</a>
+            </header>
+            <details class="policy-toc"><summary>이 문서의 목차 <span>{sections.length}개 항목</span></summary><nav aria-label="본문 목차">{sections.map((heading) => <a href={`#${heading.slug}`}>{heading.text}</a>)}</nav></details>
+            <article class="prose policy-prose"><slot /></article>
+            <a class="policy-back policy-back--bottom" href={withBase('/gather-bot')}>← 다른 정책·지원 안내 보기</a>
+        </div>
+    </div>
+</BaseLayout>

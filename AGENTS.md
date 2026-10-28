@@ -71,3 +71,7 @@ Consult the official Astro guides before changing related functionality:
 - Review notes in `docs/gather-bot` must not be included in public site output.
 - Coordinate collection/retention/operating policy changes with the bot repository and link PRs.
 - Split independent implementation units into passing commits and preserve them when merging (no squash by default).
+
+- Preserve `publishedAt` when moving or editing public policies; update `updatedAt`, `version`, and `changeSummary` for actual revisions.
+- Before changing an already published policy, preserve its prior public body and status in `src/content/policy-revisions`, with an immutable GitHub source URL and a unique per-document order. Do not rewrite historical wording or publish internal review notes.
+- Keep the public `/gather-bot/changes` comparison linked from policy pages and record policy revisions in `CHANGELOG.md`.
