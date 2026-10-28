@@ -12,6 +12,7 @@
     --accent-hover: #91ddfa;
     --accent-soft: rgb(76 195 241 / 0.1);
     --warning: #f1c56c;
+    --danger: #ed8992;
     --success: #72d6a2;
     --body-glow: rgb(76 195 241 / 0.055);
     --header-bg: rgb(10 13 18 / 0.88);
@@ -48,6 +49,7 @@
     --accent-hover: #005f84;
     --accent-soft: rgb(8 123 168 / 0.08);
     --warning: #936008;
+    --danger: #b32340;
     --success: #137849;
     --body-glow: rgb(8 123 168 / 0.035);
     --header-bg: rgb(247 248 250 / 0.9);

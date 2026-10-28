@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import PolicyDiff from '../../components/policy-diff.astro';
 import BaseLayout from '../../layouts/base-layout.astro';
 import DocumentToc from '../../components/document-toc.astro';
 import PolicyNavigation from '../../components/policy-navigation.astro';
@@ -44,7 +45,7 @@ const groups = documents.map((document) => {
                 {group.revisions.map((revision, index) => <details class="policy-revision" open={index === 0}>
                     <summary><span><time datetime={revision.date.toISOString()}>{formatPolicyDate(revision.date)}</time><strong>{revision.label}</strong><span class="policy-revision__stage">{revision.status === 'draft' ? '초안' : '확정본'}</span></span><span class="policy-diff-count"><span>+{revision.added}줄</span><span>−{revision.removed}줄</span></span></summary>
                     <div class="policy-revision__intro"><p>{revision.summary}</p><small>{revision.previous} → {revision.label}</small><a href={revision.sourceUrl}>공개 원문 기록 ↗</a></div>
-                    {revision.added + revision.removed === 0 ? <p class="policy-diff-empty">본문 변경 없음 · 명칭·문서 정보·화면 표시를 정리했습니다.</p> : <div class="policy-diff" role="region" aria-label={`${group.title} 변경 문구 비교`} tabindex="0"><div class="policy-diff-legend"><span>− 삭제된 문구</span><span>+ 추가된 문구</span><span>행 번호: 이전 / 이후</span></div><ol>{revision.lines.map((line) => line === null ? <li class="policy-diff-gap">⋯ 동일한 문구 생략</li> : <li class:list={['policy-diff-line', `policy-diff-line--${line.kind}`]}><span class="policy-diff-number" aria-hidden="true">{line.before ?? ''}</span><span class="policy-diff-number" aria-hidden="true">{line.after ?? ''}</span><span class="policy-diff-kind">{line.kind === 'added' ? '+ 추가' : line.kind === 'removed' ? '− 삭제' : '문맥'}</span><span class="policy-diff-text">{line.text || ' '}</span></li>)}</ol></div>}
+                    {revision.added + revision.removed === 0 ? <p class="policy-diff-empty">본문 변경 없음 · 명칭·문서 정보·화면 표시를 정리했습니다.</p> : <PolicyDiff title={group.title} lines={revision.lines} />}
                 </details>)}
             </section>)}
         </div>
