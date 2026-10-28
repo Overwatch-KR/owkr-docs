@@ -12,7 +12,7 @@ interface Props {
     historyHref?: string;
 }
 const { title, description, label, status, version, publishedAt, updatedAt, historyHref } = Astro.props;
-const statusLabel = status === 'draft' ? '검토 중 초안' : status === 'archived' ? '이전 문서' : '현재 문서';
+const statusLabel = status === 'draft' ? '검토 중 초안' : status === 'archived' ? '이전 문서' : '확정본';
 ---
 <section class="doc-hero">
     <div class="container doc-hero__inner">
