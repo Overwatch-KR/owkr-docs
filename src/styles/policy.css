@@ -65,9 +65,6 @@
 .policy-revision summary > span:first-child { display: grid; gap: 0.4rem; }
 .policy-revision summary time { color: var(--text-muted); font-size: 0.7rem; }
 .policy-revision summary strong { font-size: 0.85rem; }
-.policy-revision summary::after { content: '+'; color: var(--text-muted); }
-.policy-revision[open] summary::after { content: '−'; }
-.policy-revision[open][data-motion-state='closing'] summary::after { content: '+'; }
 .policy-revision__stage { width: fit-content; font-size: 0.68rem; color: var(--text-muted); }
 .policy-diff-count { display: flex; margin-left: auto; gap: 0.7rem; font-size: 0.72rem; font-variant-numeric: tabular-nums; }
 .policy-diff-count > span:first-child { color: var(--success); }

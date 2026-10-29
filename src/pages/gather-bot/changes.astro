@@ -42,7 +42,7 @@ const groups = documents.map((document) => {
             {groups.map((group) => <section class="policy-history-group" id={group.slug} aria-labelledby={`history-${group.slug}`}>
                 <div class="policy-section-heading"><h2 id={`history-${group.slug}`}>{group.title}</h2><a href={withBase(`/gather-bot/${group.slug}`)}>현재 문서 읽기 ↗</a></div>
                 {group.revisions.map((revision, index) => <details data-accordion class="policy-revision" open={index === 0}>
-                    <summary><span><time datetime={revision.date.toISOString()}>{formatPolicyDate(revision.date)}</time><strong>{revision.label}</strong>{revision.status === 'draft' && <span class="policy-revision__stage">{index === 0 ? '검토 중' : '당시 초안'}</span>}</span><span class="policy-diff-count"><span>+{revision.added}줄</span><span>−{revision.removed}줄</span></span></summary>
+                    <summary><span><time datetime={revision.date.toISOString()}>{formatPolicyDate(revision.date)}</time><strong>{revision.label}</strong>{revision.status === 'draft' && <span class="policy-revision__stage">{index === 0 ? '검토 중' : '당시 초안'}</span>}</span><span class="policy-diff-count"><span>+{revision.added}줄</span><span>−{revision.removed}줄</span></span><span class="accordion-toggle" aria-hidden="true" /></summary>
                     <div data-accordion-content>
                     <div class="policy-revision__intro"><p>{revision.summary}</p><small>{revision.previous} → {revision.label}</small><a href={revision.sourceUrl}>공개 원문 기록 ↗</a></div>
                     {revision.added + revision.removed === 0 ? <p class="policy-diff-empty">본문 변경 없음 · 명칭·문서 정보·화면 표시를 정리했습니다.</p> : <PolicyDiff title={group.title} lines={revision.lines} />}
