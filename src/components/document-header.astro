@@ -1,5 +1,4 @@
 ---
-import { withBase } from '../lib/site';
 import { formatPolicyDate } from '../lib/policies';
 interface Props {
     title: string;
@@ -12,14 +11,9 @@ interface Props {
     historyHref?: string;
 }
 const { title, description, label, version, publishedAt, updatedAt, historyHref } = Astro.props;
-const isBotPage = Astro.url.pathname.includes('/gather-bot');
 ---
 <section class="doc-hero">
     <div class="container doc-hero__inner">
-        <nav class="document-navigation" aria-label="안내 홈 선택">
-            <a href={withBase('/')} aria-current={!isBotPage ? 'location' : undefined}>내전 가이드</a>
-            <a href={withBase('/gather-bot')} aria-current={isBotPage ? 'location' : undefined}>봇 정책·지원</a>
-        </nav>
         <header class="document-header">
             <div class="document-header__intro">
                 <div class="document-header__copy">
