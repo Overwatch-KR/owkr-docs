@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import botIcon from '../../assets/bot-icon.png';
 import { getEntry, render } from 'astro:content';
+import DocumentHeader from '../../components/document-header.astro';
 import BaseLayout from '../../layouts/base-layout.astro';
 import { withBase } from '../../lib/site';
 import { getPolicyDocuments, formatPolicyDate } from '../../lib/policies';
@@ -12,12 +13,10 @@ const { Content } = await render(entry);
 const documents = await getPolicyDocuments();
 ---
 <BaseLayout title={entry.data.title} description={entry.data.description} section="bot">
+    <DocumentHeader title="시간을달리는소녀" label="OWKR Discord 내전 운영 봇" description="이용약관, 개인정보처리방침과 문의·삭제 요청 안내를 확인하세요." publishedAt={entry.data.publishedAt} updatedAt={entry.data.updatedAt} showHomeLink={false}>
+        <Image slot="illustration" src={botIcon} alt="시간을달리는소녀 봇 아이콘" width={112} height={112} format="webp" loading="eager" fetchpriority="high" />
+    </DocumentHeader>
     <div class="container policy-home">
-        <header class="policy-home__hero">
-            <div><p class="policy-eyebrow">OWKR Discord 내전 운영 봇</p><h1>시간을달리는소녀<br /><span>정책과 이용 안내</span></h1><p class="policy-home__lead">궁금한 내용을 바로 찾아보세요.<br />이용 조건부터 개인정보, 문의 방법까지 한곳에 모았습니다.</p></div>
-            <div class="policy-clock"><Image src={botIcon} alt="시간을달리는소녀 봇 아이콘" width={180} height={180} format="webp" loading="eager" fetchpriority="high" /><span>당신의 내전 시간을 함께</span></div>
-            <dl class="policy-dates policy-home__dates"><div><dt>최초 발행일</dt><dd>{entry.data.publishedAt && formatPolicyDate(entry.data.publishedAt)}</dd></div><div><dt>최근 갱신일</dt><dd>{formatPolicyDate(entry.data.updatedAt)}</dd></div></dl>
-        </header>
         <section aria-labelledby="policy-documents-title">
             <div class="policy-section-heading"><h2 id="policy-documents-title">어떤 안내가 필요하신가요?</h2><span>문서별로 바로 확인하세요</span></div>
             <div class="policy-cards">{documents.map(({ slug, title, summary, action, entry: document }, index) => <a class="policy-card" href={withBase(`/gather-bot/${slug}`)}><div class="policy-card__top"><span class="policy-card__number">0{index + 1}</span><span class:list={['policy-status', { 'policy-status--draft': document.data.status === 'draft' }]}>{document.data.status === 'draft' ? '검토 중 초안' : slug === 'terms' ? '시행 중' : '공식 안내'}</span></div><h3>{title}</h3><p>{summary}</p><span class="policy-card__action">{action}<span aria-hidden="true">↗</span></span><small>최근 갱신 {formatPolicyDate(document.data.updatedAt)} · v{document.data.version}</small></a>)}</div>
