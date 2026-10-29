@@ -125,7 +125,6 @@ main {
     flex: 1;
 }
 
-.home-index h1,
 .home-index h2,
 .doc-hero h1,
 .prose h2,
@@ -138,7 +137,6 @@ main {
     text-wrap: balance;
 }
 
-.home-index__header > p:not(.eyebrow),
 .home-index__link p,
 .doc-hero__description,
 .document-toc,
@@ -196,7 +194,6 @@ main {
     overflow-wrap: normal;
 }
 
-.home-index__header,
 .home-index__link > div,
 .doc-hero__heading > div,
 .faq-item summary > span:first-child,
@@ -403,31 +400,11 @@ main {
 }
 
 .home-index {
-    padding: clamp(5rem, 10vw, 8rem) 0 clamp(6rem, 11vw, 9rem);
+    padding: 3rem 0 7rem;
 }
 
 .home-index__inner {
-    max-width: 46rem;
-}
-
-.home-index__header {
-    max-width: 40rem;
-    padding-bottom: clamp(2.5rem, 5vw, 4rem);
-}
-
-.home-index h1 {
-    margin: 0;
-    font-size: clamp(2.5rem, 5.4vw, 4rem);
-    font-weight: 760;
-    line-height: 1.1;
-    letter-spacing: -0.06em;
-}
-
-.home-index__header > p:not(.eyebrow) {
-    margin: 1.25rem 0 0;
-    font-size: 1rem;
-    line-height: 1.8;
-    color: var(--text-soft);
+    max-width: var(--content-width);
 }
 
 .home-index__links {
@@ -1514,7 +1491,7 @@ body.faq-assistant-open {
     }
 
     .home-index {
-        padding: 4.5rem 0 6rem;
+        padding: 2rem 0 5rem;
     }
 
     .home-index__link {
@@ -1621,4 +1598,12 @@ body.faq-assistant-open {
 @media (max-width: 620px) {
     .document-meta { gap: 0.9rem 1rem; }
     .prose { font-size: 0.9rem; }
+}
+
+.document-header__intro { display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+.document-header__copy { min-width: 0; }
+.document-header__illustration { flex: 0 0 112px; }
+.document-header__illustration img { display: block; width: 112px; height: 112px; border-radius: 50%; box-shadow: 0 0 40px var(--accent-soft); }
+@media (max-width: 620px) {
+    .document-header__illustration { display: none; }
 }

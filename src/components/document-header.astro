@@ -10,17 +10,23 @@ interface Props {
     publishedAt?: Date;
     updatedAt?: Date;
     historyHref?: string;
+    showHomeLink?: boolean;
 }
-const { title, description, label, status, version, publishedAt, updatedAt, historyHref } = Astro.props;
+const { title, description, label, status, version, publishedAt, updatedAt, historyHref, showHomeLink = true } = Astro.props;
 const statusLabel = status === 'draft' ? '검토 중 초안' : status === 'archived' ? '이전 문서' : '확정본';
 ---
 <section class="doc-hero">
     <div class="container doc-hero__inner">
-        {Astro.slots.has('navigation') ? <slot name="navigation" /> : <a class="eyebrow-link" href={withBase('/')}>OWKR 내전 가이드</a>}
+        {Astro.slots.has('navigation') ? <slot name="navigation" /> : showHomeLink && <a class="eyebrow-link" href={withBase('/')}>OWKR 내전 가이드</a>}
         <header class="document-header">
-            <div class="document-header__label"><p class="eyebrow">{label}</p>{status && <span class:list={['document-status', { 'document-status--draft': status === 'draft' }]}>{statusLabel}</span>}</div>
-            <h1>{title}</h1>
-            <p class="doc-hero__description">{description}</p>
+            <div class="document-header__intro">
+                <div class="document-header__copy">
+                    <div class="document-header__label"><p class="eyebrow">{label}</p>{status && <span class:list={['document-status', { 'document-status--draft': status === 'draft' }]}>{statusLabel}</span>}</div>
+                    <h1>{title}</h1>
+                    <p class="doc-hero__description">{description}</p>
+                </div>
+                {Astro.slots.has('illustration') && <div class="document-header__illustration"><slot name="illustration" /></div>}
+            </div>
             {(publishedAt || updatedAt || version) && <dl class="document-meta" aria-label="문서 정보">
                 {publishedAt && <div><dt>최초 발행일</dt><dd><time datetime={publishedAt.toISOString()}>{formatPolicyDate(publishedAt)}</time></dd></div>}
                 {updatedAt && <div><dt>최근 갱신일</dt><dd><time datetime={updatedAt.toISOString()}>{formatPolicyDate(updatedAt)}</time></dd></div>}
