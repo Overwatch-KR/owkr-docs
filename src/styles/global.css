@@ -1649,3 +1649,5 @@ body.faq-assistant-open {
     .faq-assistant__body { padding: 1rem 0.85rem; }
     .faq-assistant__footer { padding-bottom: calc(0.6rem + env(safe-area-inset-bottom)); }
 }
+
+.faq-assistant__skip { margin-top: 0.6rem; padding: 0.35rem 0; border: 0; color: var(--accent); background: transparent; font-size: 0.75rem; cursor: pointer; text-decoration: underline; text-underline-offset: 0.2em; }

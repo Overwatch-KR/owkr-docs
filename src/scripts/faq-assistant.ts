@@ -1,4 +1,5 @@
 import { motionOptions, prefersReducedMotion } from '../lib/motion';
+import { createAnswerWriter } from '../lib/answer-writer';
 
 const animateEntrance = (element: HTMLElement) => {
     if (!prefersReducedMotion()) {
@@ -54,6 +55,7 @@ const setupFaqAssistant = (root: HTMLElement) => {
     let selectedQuestionButton: HTMLButtonElement | null = null;
     let responseTimer: number | null = null;
     let isResponding = false;
+    let answerWriter: ReturnType<typeof createAnswerWriter> | null = null;
 
     const scrollConversation = (anchor?: HTMLElement) => {
         window.requestAnimationFrame(() => {
@@ -79,6 +81,8 @@ const setupFaqAssistant = (root: HTMLElement) => {
     const resetConversation = () => {
         if (responseTimer !== null) window.clearTimeout(responseTimer);
         responseTimer = null;
+        answerWriter?.cancel();
+        answerWriter = null;
         isResponding = false;
         selectedCategoryButton = null;
         selectedQuestionButton = null;
@@ -112,6 +116,7 @@ const setupFaqAssistant = (root: HTMLElement) => {
 
     const closeAssistant = () => {
         root.dataset.state = 'closed';
+        answerWriter?.complete();
         trigger.setAttribute('aria-expanded', 'false');
         panel.setAttribute('aria-hidden', 'true');
         panel.inert = true;
@@ -163,7 +168,8 @@ const setupFaqAssistant = (root: HTMLElement) => {
         const response = cloneTemplateRoot(responseTemplate);
         const content = response?.querySelector<HTMLElement>('[data-assistant-response-content]');
         const typing = response?.querySelector<HTMLElement>('[data-assistant-typing]');
-        if (!response || !content || !typing) return;
+        const skip = response?.querySelector<HTMLButtonElement>('[data-assistant-skip]');
+        if (!response || !content || !typing || !skip) return;
         selectedQuestionButton = button;
         const userMessage = appendUserMessage(questionText);
         if (!userMessage) return;
@@ -182,14 +188,48 @@ const setupFaqAssistant = (root: HTMLElement) => {
             content.append(answerTemplate.content.cloneNode(true));
             typing.hidden = true;
             content.hidden = false;
-            followUps.hidden = false;
-            conversation.append(followUps);
-            conversation.ariaBusy = 'false';
-            isResponding = false;
-            topicsButton.disabled = false;
-            animateEntrance(content);
-            const turnHeight = userMessage.offsetHeight + response.offsetHeight + followUps.offsetHeight + 48;
-            scrollConversation(turnHeight > scrollArea.clientHeight ? userMessage : undefined);
+            const finish = () => {
+                content.removeAttribute('aria-hidden');
+                content.inert = false;
+                const skippedWithFocus = document.activeElement === skip;
+                skip.hidden = true;
+                followUps.hidden = false;
+                conversation.append(followUps);
+                conversation.ariaBusy = 'false';
+                isResponding = false;
+                topicsButton.disabled = false;
+                answerWriter = null;
+                if (skippedWithFocus) backButton.focus({ preventScroll: true });
+                scrollConversation();
+            };
+            if (prefersReducedMotion() || root.dataset.state !== 'open') {
+                finish();
+                return;
+            }
+            const nodes: Text[] = [];
+            const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT);
+            let node = walker.nextNode();
+            while (node) {
+                if (node.textContent?.trim()) nodes.push(node as Text);
+                node = walker.nextNode();
+            }
+            content.setAttribute('aria-hidden', 'true');
+            content.inert = true;
+            skip.hidden = false;
+            skip.addEventListener('click', () => answerWriter?.complete(), { once: true });
+            answerWriter = createAnswerWriter(nodes.map((text) => ({
+                text: text.data,
+                write: (value) => { text.data = value; },
+            })), {
+                schedule: (callback, delay) => window.setTimeout(callback, delay),
+                unschedule: (id) => window.clearTimeout(id),
+                onComplete: finish,
+                onProgress: () => {
+                    if (root.dataset.state === 'open' && scrollArea.scrollHeight - scrollArea.scrollTop - scrollArea.clientHeight < 96) {
+                        scrollArea.scrollTo({ top: scrollArea.scrollHeight, behavior: 'auto' });
+                    }
+                },
+            });
         };
         if (prefersReducedMotion()) finishResponse();
         else responseTimer = window.setTimeout(finishResponse, Number(motionOptions().duration));
