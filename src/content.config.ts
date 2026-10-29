@@ -1,6 +1,7 @@
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
+import { FAQ_CATEGORIES } from './lib/faq';
 
 const documentSchema = z.object({
     title: z.string(),
@@ -23,7 +24,7 @@ const faq = defineCollection({
     loader: glob({ pattern: '**/*.md', base: './src/content/faq' }),
     schema: z.object({
         question: z.string(),
-        category: z.enum(['참가', '게임 진행', '커뮤니케이션', '경고와 제재']),
+        category: z.enum(FAQ_CATEGORIES),
         order: z.number().int().positive(),
     }),
 });

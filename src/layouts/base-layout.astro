@@ -14,7 +14,6 @@ interface Props {
 
 const {
     noindex = false,
-    section = 'community',
     title = 'OWKR 내전 운영 가이드',
     description = '모두가 공정하고 즐겁게 참여할 수 있도록 정리한 OWKR 내전 규칙과 참가 안내입니다.',
 } = Astro.props;
@@ -77,7 +76,7 @@ const canonicalUrl = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astr
                 <slot />
             </main>
             <SiteFooter />
-            {section === 'community' && <FaqAssistant />}
+            <FaqAssistant />
         </div>
         <script>
             import '../scripts/accordion';
