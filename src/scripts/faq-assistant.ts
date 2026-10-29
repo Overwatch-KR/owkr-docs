@@ -1,29 +1,23 @@
 import { motionOptions, prefersReducedMotion } from '../lib/motion';
 
-const animateEntrance = (element: HTMLElement, distance = 8) => {
-    if (prefersReducedMotion()) {
-        return;
+const animateEntrance = (element: HTMLElement) => {
+    if (!prefersReducedMotion()) {
+        element.animate(
+            [{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'translateY(0)' }],
+            motionOptions(),
+        );
     }
-
-    element.animate(
-        [
-            { opacity: 0, transform: `translateY(${distance}px)` },
-            { opacity: 1, transform: 'translateY(0)' },
-        ],
-        motionOptions(),
-    );
 };
 
 const getFocusableElements = (panel: HTMLElement) =>
-    Array.from(
-        panel.querySelectorAll<HTMLElement>(
-            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
-        ),
-    ).filter((element) => !element.hidden && element.offsetParent !== null);
+    Array.from(panel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    )).filter((element) => !element.hidden && element.offsetParent !== null);
 
 const cloneTemplateRoot = (template: HTMLTemplateElement) =>
     template.content.firstElementChild?.cloneNode(true) as HTMLElement | undefined;
 
+/** @description FAQ 선택을 대화로 쌓고 닫기·초기화 시 지연 응답과 포커스를 관리한다. */
 const setupFaqAssistant = (root: HTMLElement) => {
     const trigger = root.querySelector<HTMLButtonElement>('[data-assistant-trigger]');
     const panel = root.querySelector<HTMLElement>('[data-assistant-panel]');
@@ -32,152 +26,78 @@ const setupFaqAssistant = (root: HTMLElement) => {
     const initialMessage = root.querySelector<HTMLElement>('[data-assistant-initial-message]');
     const categoryOptions = root.querySelector<HTMLElement>('[data-assistant-category-options]');
     const questions = root.querySelector<HTMLElement>('[data-assistant-questions]');
-    const questionOptions = root.querySelector<HTMLElement>('[data-assistant-question-options]');
+    const questionPrompt = root.querySelector<HTMLElement>('[data-assistant-question-prompt]');
     const followUps = root.querySelector<HTMLElement>('[data-assistant-follow-ups]');
-    const spacer = root.querySelector<HTMLElement>('[data-assistant-spacer]');
     const backButton = root.querySelector<HTMLButtonElement>('[data-assistant-back]');
-    const restartButton = root.querySelector<HTMLButtonElement>('[data-assistant-restart]');
+    const resetButton = root.querySelector<HTMLButtonElement>('[data-assistant-reset]');
+    const topicsButton = root.querySelector<HTMLButtonElement>('[data-assistant-topics]');
     const userTemplate = root.querySelector<HTMLTemplateElement>('[data-assistant-user-template]');
-    const responseTemplate = root.querySelector<HTMLTemplateElement>(
-        '[data-assistant-response-template]',
-    );
-    const closeButtons = root.querySelectorAll<HTMLButtonElement>('[data-assistant-close]');
-    const categoryButtons = root.querySelectorAll<HTMLButtonElement>(
-        '[data-assistant-category]',
-    );
-    const questionButtons = root.querySelectorAll<HTMLButtonElement>(
-        '[data-assistant-question]',
-    );
-    const answerTemplates = new Map(
-        Array.from(
-            root.querySelectorAll<HTMLTemplateElement>('[data-assistant-answer-template]'),
-        ).map((template) => [template.dataset.assistantAnswerTemplate, template]),
-    );
+    const responseTemplate = root.querySelector<HTMLTemplateElement>('[data-assistant-response-template]');
+    const categoryButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-assistant-category]'));
+    const questionButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-assistant-question]'));
+    const answerTemplates = new Map(Array.from(
+        root.querySelectorAll<HTMLTemplateElement>('[data-assistant-answer-template]'),
+    ).map((template) => [template.dataset.assistantAnswerTemplate, template]));
 
-    if (
-        !trigger ||
-        !panel ||
-        !scrollArea ||
-        !conversation ||
-        !initialMessage ||
-        !categoryOptions ||
-        !questions ||
-        !questionOptions ||
-        !followUps ||
-        !spacer ||
-        !backButton ||
-        !restartButton ||
-        !userTemplate ||
-        !responseTemplate
-    ) {
+    if (!trigger || !panel || !scrollArea || !conversation || !initialMessage || !categoryOptions ||
+        !questions || !questionPrompt || !followUps || !backButton || !resetButton || !topicsButton ||
+        !userTemplate || !responseTemplate) {
         return;
     }
 
-    const background = Array.from(document.querySelectorAll<HTMLElement>('.site-shell > :not(.faq-assistant), body > .skip-link'));
+    const background = Array.from(document.querySelectorAll<HTMLElement>(
+        '.site-shell > :not(.faq-assistant), body > .skip-link',
+    ));
     const previousInert = new Map<HTMLElement, boolean>();
     let lastFocusedElement: HTMLElement | null = null;
     let selectedCategoryButton: HTMLButtonElement | null = null;
     let selectedQuestionButton: HTMLButtonElement | null = null;
-    let resetTimer: number | null = null;
+    let responseTimer: number | null = null;
     let isResponding = false;
 
-    const scrollToElement = (element: HTMLElement, block: ScrollLogicalPosition = 'nearest') => {
+    const scrollConversation = (anchor?: HTMLElement) => {
         window.requestAnimationFrame(() => {
-            element.scrollIntoView({
-                behavior: prefersReducedMotion() ? 'auto' : 'smooth',
-                block,
-            });
-        });
-    };
-
-    const alignQuestionAtTop = (questionMessage: HTMLElement, responseMessage: HTMLElement) => {
-        window.requestAnimationFrame(() => {
-            const scrollRect = scrollArea.getBoundingClientRect();
-            const questionRect = questionMessage.getBoundingClientRect();
-            const viewportHeight = scrollArea.clientHeight;
-            const responseHeight = responseMessage.offsetHeight;
-            const questionHeight = questionMessage.offsetHeight;
-            const targetTop = scrollArea.scrollTop + questionRect.top - scrollRect.top - 12;
-            const spacerHeight = Math.max(
-                24,
-                viewportHeight - questionHeight - responseHeight - 48,
-            );
-
-            spacer.style.height = `${spacerHeight}px`;
-
-            window.requestAnimationFrame(() => {
-                scrollArea.scrollTo({
-                    top: targetTop,
-                    behavior: prefersReducedMotion() ? 'auto' : 'smooth',
-                });
-            });
+            if (root.dataset.state !== 'open') return;
+            const top = anchor
+                ? scrollArea.scrollTop + anchor.getBoundingClientRect().top - scrollArea.getBoundingClientRect().top - 16
+                : scrollArea.scrollHeight;
+            scrollArea.scrollTo({ top, behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
         });
     };
 
     const appendUserMessage = (text: string) => {
         const message = cloneTemplateRoot(userTemplate);
-        const messageText = message?.querySelector<HTMLElement>('[data-assistant-user-text]');
-
-        if (!message || !messageText) {
-            return;
-        }
-
-        messageText.textContent = text;
+        const content = message?.querySelector<HTMLElement>('[data-assistant-user-text]');
+        if (!message || !content) return;
+        content.textContent = text;
         conversation.append(message);
+        resetButton.disabled = false;
         animateEntrance(message);
-
         return message;
     };
 
-    const appendResponse = (answerTemplate: HTMLTemplateElement) => {
-        const message = cloneTemplateRoot(responseTemplate);
-        const typing = message?.querySelector<HTMLElement>('[data-assistant-typing]');
-        const content = message?.querySelector<HTMLElement>('[data-assistant-response-content]');
-        const mascot = message?.querySelector<HTMLImageElement>('[data-assistant-mascot]');
-
-        if (!message || !typing || !content || !mascot) {
-            return;
-        }
-
-        content.append(answerTemplate.content.cloneNode(true));
-        conversation.append(message);
-        animateEntrance(message);
-
-        return { content, mascot, message, typing };
-    };
-
     const resetConversation = () => {
-        resetTimer = null;
+        if (responseTimer !== null) window.clearTimeout(responseTimer);
+        responseTimer = null;
         isResponding = false;
         selectedCategoryButton = null;
         selectedQuestionButton = null;
-        categoryButtons.forEach((button) => {
-            button.setAttribute('aria-pressed', 'false');
-        });
-        questionButtons.forEach((button) => {
-            button.hidden = true;
-        });
+        categoryButtons.forEach((button) => button.setAttribute('aria-pressed', 'false'));
+        questionButtons.forEach((button) => { button.hidden = true; });
         categoryOptions.hidden = false;
         questions.hidden = true;
-        questionOptions.hidden = false;
         followUps.hidden = true;
         conversation.ariaBusy = 'false';
         conversation.replaceChildren(initialMessage, categoryOptions, questions, followUps);
-        spacer.style.height = '0px';
+        resetButton.disabled = true;
+        topicsButton.disabled = false;
         scrollArea.scrollTo({ top: 0, behavior: 'auto' });
+        categoryButtons[0]?.focus({ preventScroll: true });
     };
 
     const openAssistant = () => {
-        if (resetTimer !== null) {
-            window.clearTimeout(resetTimer);
-            resetConversation();
-        }
-
-        lastFocusedElement =
-            document.activeElement instanceof HTMLElement &&
-            document.activeElement !== document.body
-                ? document.activeElement
-                : trigger;
+        if (root.dataset.state === 'open') return;
+        lastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : trigger;
         root.dataset.state = 'open';
         trigger.setAttribute('aria-expanded', 'true');
         panel.setAttribute('aria-hidden', 'false');
@@ -187,10 +107,7 @@ const setupFaqAssistant = (root: HTMLElement) => {
             previousInert.set(element, element.inert);
             element.inert = true;
         });
-
-        window.requestAnimationFrame(() => {
-            panel.querySelector<HTMLButtonElement>('[data-assistant-close]')?.focus();
-        });
+        panel.querySelector<HTMLButtonElement>('[data-assistant-close]')?.focus({ preventScroll: true });
     };
 
     const closeAssistant = () => {
@@ -201,141 +118,90 @@ const setupFaqAssistant = (root: HTMLElement) => {
         document.body.classList.remove('faq-assistant-open');
         background.forEach((element) => { element.inert = previousInert.get(element) ?? false; });
         previousInert.clear();
-        isResponding = false;
-        conversation.ariaBusy = 'false';
-
-        if (prefersReducedMotion()) {
-            resetConversation();
-        } else {
-            resetTimer = window.setTimeout(resetConversation, Number(motionOptions().duration));
-        }
-
-        (lastFocusedElement ?? trigger).focus();
-    };
-
-    const showCategory = (categoryButton: HTMLButtonElement) => {
-        const category = categoryButton.dataset.assistantCategory;
-
-        if (!category || isResponding) {
-            return;
-        }
-
-        selectedCategoryButton = categoryButton;
-        selectedQuestionButton = null;
-        categoryButtons.forEach((button) => {
-            button.setAttribute('aria-pressed', String(button === categoryButton));
-        });
-        questionButtons.forEach((button) => {
-            button.hidden = button.dataset.category !== category;
-        });
-        categoryOptions.hidden = true;
-        followUps.hidden = true;
-        questionOptions.hidden = false;
-        questions.hidden = false;
-        spacer.style.height = '0px';
-        conversation.append(questions);
-        animateEntrance(questions);
-        scrollToElement(questions);
-
-        window.requestAnimationFrame(() => {
-            Array.from(questionButtons)
-                .find((button) => !button.hidden)
-                ?.focus({ preventScroll: true });
-        });
-    };
-
-    const showAnswer = (questionButton: HTMLButtonElement) => {
-        const questionId = questionButton.dataset.assistantQuestion;
-        const questionText = questionButton.querySelector('span')?.textContent?.trim();
-        const answerTemplate = questionId ? answerTemplates.get(questionId) : undefined;
-
-        if (!questionId || !questionText || !answerTemplate || isResponding) {
-            return;
-        }
-
-        selectedQuestionButton = questionButton;
-        isResponding = true;
-        questionOptions.hidden = true;
-        questions.hidden = true;
-        followUps.hidden = true;
-        spacer.style.height = '0px';
-
-        const questionMessage = appendUserMessage(questionText);
-        const response = appendResponse(answerTemplate);
-
-        if (!questionMessage || !response) {
-            isResponding = false;
-            return;
-        }
-
-        conversation.ariaBusy = 'true';
-        questionMessage.focus({ preventScroll: true });
-        alignQuestionAtTop(questionMessage, response.message);
-
-        response.typing.hidden = true;
-        response.content.hidden = false;
-        const successSrc = response.mascot.dataset.successSrc;
-
-        if (successSrc) {
-            response.mascot.src = successSrc;
-        }
-        followUps.hidden = false;
-        conversation.append(followUps);
-        conversation.ariaBusy = 'false';
-        isResponding = false;
-        animateEntrance(followUps, 6);
-        alignQuestionAtTop(questionMessage, response.message);
-    };
-
-    const showQuestions = () => {
-        if (!selectedCategoryButton || isResponding) {
-            return;
-        }
-
-        followUps.hidden = true;
-        questionOptions.hidden = false;
-        questions.hidden = false;
-        spacer.style.height = '0px';
-        conversation.append(questions);
-        animateEntrance(questions);
-        scrollToElement(questions);
-
-        window.requestAnimationFrame(() => {
-            (
-                selectedQuestionButton ??
-                Array.from(questionButtons).find((button) => !button.hidden)
-            )?.focus({ preventScroll: true });
-        });
+        (lastFocusedElement ?? trigger).focus({ preventScroll: true });
     };
 
     const showCategories = () => {
-        if (isResponding) {
-            return;
-        }
-
-        followUps.hidden = true;
+        if (isResponding || !categoryOptions.hidden) return;
         questions.hidden = true;
+        followUps.hidden = true;
         categoryOptions.hidden = false;
-        spacer.style.height = '0px';
         conversation.append(categoryOptions);
         animateEntrance(categoryOptions);
-        scrollToElement(categoryOptions);
+        scrollConversation();
+        (selectedCategoryButton ?? categoryButtons[0])?.focus({ preventScroll: true });
+    };
 
-        window.requestAnimationFrame(() => {
-            (selectedCategoryButton ?? categoryButtons[0])?.focus({ preventScroll: true });
-        });
+    const showQuestions = () => {
+        if (isResponding || !selectedCategoryButton) return;
+        categoryOptions.hidden = true;
+        followUps.hidden = true;
+        questions.hidden = false;
+        conversation.append(questions);
+        animateEntrance(questions);
+        scrollConversation();
+        (selectedQuestionButton ?? questionButtons.find((button) => !button.hidden))?.focus({ preventScroll: true });
+    };
+
+    const showCategory = (button: HTMLButtonElement) => {
+        const category = button.dataset.assistantCategory;
+        if (!category || isResponding) return;
+        selectedCategoryButton = button;
+        selectedQuestionButton = null;
+        categoryButtons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+        questionButtons.forEach((item) => { item.hidden = item.dataset.category !== category; });
+        appendUserMessage(category);
+        questionPrompt.textContent = `${category}에 대해 어떤 내용이 궁금하신가요?`;
+        showQuestions();
+    };
+
+    const showAnswer = (button: HTMLButtonElement) => {
+        const questionId = button.dataset.assistantQuestion;
+        const questionText = button.querySelector('span')?.textContent?.trim();
+        const answerTemplate = questionId ? answerTemplates.get(questionId) : undefined;
+        if (!questionText || !answerTemplate || isResponding) return;
+        const response = cloneTemplateRoot(responseTemplate);
+        const content = response?.querySelector<HTMLElement>('[data-assistant-response-content]');
+        const typing = response?.querySelector<HTMLElement>('[data-assistant-typing]');
+        if (!response || !content || !typing) return;
+        selectedQuestionButton = button;
+        const userMessage = appendUserMessage(questionText);
+        if (!userMessage) return;
+        questions.hidden = true;
+        followUps.hidden = true;
+        isResponding = true;
+        topicsButton.disabled = true;
+        conversation.ariaBusy = 'true';
+        conversation.append(response);
+        animateEntrance(response);
+        userMessage.focus({ preventScroll: true });
+        scrollConversation();
+
+        const finishResponse = () => {
+            responseTimer = null;
+            content.append(answerTemplate.content.cloneNode(true));
+            typing.hidden = true;
+            content.hidden = false;
+            followUps.hidden = false;
+            conversation.append(followUps);
+            conversation.ariaBusy = 'false';
+            isResponding = false;
+            topicsButton.disabled = false;
+            animateEntrance(content);
+            const turnHeight = userMessage.offsetHeight + response.offsetHeight + followUps.offsetHeight + 48;
+            scrollConversation(turnHeight > scrollArea.clientHeight ? userMessage : undefined);
+        };
+        if (prefersReducedMotion()) finishResponse();
+        else responseTimer = window.setTimeout(finishResponse, Number(motionOptions().duration));
     };
 
     trigger.addEventListener('click', openAssistant);
-    closeButtons.forEach((button) => button.addEventListener('click', closeAssistant));
-    categoryButtons.forEach((button) => {
-        button.addEventListener('click', () => showCategory(button));
-    });
-    questionButtons.forEach((button) => {
-        button.addEventListener('click', () => showAnswer(button));
-    });
+    root.querySelectorAll<HTMLButtonElement>('[data-assistant-close]').forEach((button) => button.addEventListener('click', closeAssistant));
+    categoryButtons.forEach((button) => button.addEventListener('click', () => showCategory(button)));
+    questionButtons.forEach((button) => button.addEventListener('click', () => showAnswer(button)));
+    root.querySelectorAll<HTMLButtonElement>('[data-assistant-restart], [data-assistant-topics]').forEach((button) => button.addEventListener('click', showCategories));
     backButton.addEventListener('click', showQuestions);
-    restartButton.addEventListener('click', showCategories);
+    resetButton.addEventListener('click', resetConversation);
 
     panel.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
@@ -343,25 +209,16 @@ const setupFaqAssistant = (root: HTMLElement) => {
             closeAssistant();
             return;
         }
-
-        if (event.key !== 'Tab') {
-            return;
-        }
-
-        const focusableElements = getFocusableElements(panel);
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-
-        if (!firstElement || !lastElement) {
-            return;
-        }
-
-        if (event.shiftKey && document.activeElement === firstElement) {
+        if (event.key !== 'Tab') return;
+        const elements = getFocusableElements(panel);
+        const first = elements[0];
+        const last = elements.at(-1);
+        if (event.shiftKey && document.activeElement === first) {
             event.preventDefault();
-            lastElement.focus();
-        } else if (!event.shiftKey && document.activeElement === lastElement) {
+            last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
             event.preventDefault();
-            firstElement.focus();
+            first?.focus();
         }
     });
 };

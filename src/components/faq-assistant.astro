@@ -1,9 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import { FAQ_CATEGORIES } from '../lib/faq';
-import { withBase } from '../lib/site';
 import FaqAssistantMascot from './faq-assistant-mascot.astro';
-
 
 const entries = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
 const items = await Promise.all(
@@ -52,6 +50,7 @@ const items = await Promise.all(
                 <FaqAssistantMascot size="small" />
                 <div class="faq-assistant__identity">
                     <h2 id="faq-assistant-title">FAQ 도우미</h2>
+                    <p>내전 규칙과 봇 사용 안내</p>
                 </div>
             </div>
             <button
@@ -67,7 +66,9 @@ const items = await Promise.all(
         <div class="faq-assistant__body" data-assistant-scroll>
             <div
                 class="faq-assistant__conversation"
+                role="log"
                 aria-live="polite"
+                aria-relevant="additions"
                 aria-label="FAQ 도우미 대화"
                 data-assistant-conversation
             >
@@ -75,10 +76,11 @@ const items = await Promise.all(
                     class="faq-assistant__message faq-assistant__message--bot"
                     data-assistant-initial-message
                 >
-                    <FaqAssistantMascot expression="chat" size="small" />
+                    <FaqAssistantMascot size="small" />
                     <div class="faq-assistant__message-content">
+                        <span class="faq-assistant__author">FAQ 도우미</span>
                         <div class="faq-assistant__bubble faq-assistant__bubble--bot">
-                            <p>내전 규칙이나 봇 사용법이 궁금하신가요? 주제를 선택하면 문서에 있는 답변을 바로 보여드려요.</p>
+                            <p>안녕하세요! 내전 규칙과 봇 사용법을 안내해 드릴게요. 아래에서 궁금한 주제를 골라 주세요.</p>
                         </div>
                     </div>
                 </div>
@@ -106,8 +108,10 @@ const items = await Promise.all(
                     hidden
                     data-assistant-questions
                 >
-                    <FaqAssistantMascot expression="search" size="small" />
+                    <FaqAssistantMascot size="small" />
                     <div class="faq-assistant__message-content">
+                        <span class="faq-assistant__author">FAQ 도우미</span>
+                        <p class="faq-assistant__question-prompt" data-assistant-question-prompt>어떤 내용이 궁금하신가요?</p>
                         <div
                             class="faq-assistant__question-list faq-assistant__quick-replies"
                             data-assistant-question-options
@@ -142,14 +146,12 @@ const items = await Promise.all(
                     </button>
                 </div>
             </div>
-            <div class="faq-assistant__scroll-spacer" aria-hidden="true" data-assistant-spacer>
-            </div>
         </div>
 
         <footer class="faq-assistant__footer">
-            <a href={withBase('/faq')}>전체 FAQ</a>
-            <a href={withBase('/rules')}>내전 규칙</a>
-            <a href={withBase('/gather-bot')}>봇 정책·지원</a>
+            <button type="button" data-assistant-topics>주제 바꾸기</button>
+            <span>문서 기반 FAQ</span>
+            <button type="button" data-assistant-reset disabled>처음부터</button>
         </footer>
 
         <template data-assistant-user-template>
@@ -169,13 +171,14 @@ const items = await Promise.all(
                 class="faq-assistant__message faq-assistant__message--bot"
                 data-assistant-turn
             >
-                <FaqAssistantMascot expression="loading" size="small" />
+                <FaqAssistantMascot size="small" />
                 <div class="faq-assistant__message-content">
+                    <span class="faq-assistant__author">FAQ 도우미</span>
                     <div class="faq-assistant__bubble faq-assistant__bubble--bot">
                         <div
                             class="faq-assistant__typing"
                             role="status"
-                            aria-label="답변 작성 중"
+                            aria-label="답변 준비 중"
                             data-assistant-typing
                         >
                             <span aria-hidden="true"></span>
