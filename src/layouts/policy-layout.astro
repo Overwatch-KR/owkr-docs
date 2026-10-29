@@ -1,9 +1,10 @@
 ---
+import DocumentHeader from '../components/document-header.astro';
 import BaseLayout from './base-layout.astro';
 import DocumentToc from '../components/document-toc.astro';
 import PolicyNavigation from '../components/policy-navigation.astro';
 import { withBase } from '../lib/site';
-import { formatPolicyDate, POLICY_LINKS } from '../lib/policies';
+import { POLICY_LINKS } from '../lib/policies';
 import '../styles/policy.css';
 interface Props {
     slug: string;
@@ -20,24 +21,13 @@ if (!publishedAt) throw new Error(`최초 발행일 누락: ${slug}`);
 const shortTitle = POLICY_LINKS.find((link) => link.slug === slug)?.title ?? title;
 ---
 <BaseLayout title={title} description={description} noindex={status === 'draft'} section="bot">
-    <div class="container policy-document-intro">
-        <PolicyNavigation current={slug} />
-            <header class="policy-document__header">
-                <div class="policy-heading-row"><p class="policy-eyebrow">시간을달리는소녀</p><span class:list={['policy-status', { 'policy-status--draft': status === 'draft' }]}>{status === 'draft' ? '검토 중 초안' : '시행 중'}</span></div>
-                <h1>{shortTitle}</h1>
-                <p>{description}</p>
-                <dl class="policy-dates">
-                    <div><dt>최초 발행일</dt><dd><time datetime={publishedAt.toISOString()}>{formatPolicyDate(publishedAt)}</time></dd></div>
-                    <div><dt>최근 갱신일</dt><dd><time datetime={updatedAt.toISOString()}>{formatPolicyDate(updatedAt)}</time></dd></div>
-                    <div><dt>버전</dt><dd>{version}</dd></div>
-                </dl>
-                <a class="policy-history-link" href={withBase(`/gather-bot/changes#${slug}`)}>이 문서의 변경 내용 비교 →</a>
-            </header>
-    </div>
+    <DocumentHeader title={shortTitle} {description} label="시간을달리는소녀" {status} {version} {publishedAt} {updatedAt} historyHref={withBase(`/gather-bot/changes#${slug}`)}>
+        <PolicyNavigation slot="navigation" current={slug} />
+    </DocumentHeader>
     <div class="container document-grid">
         <DocumentToc headings={headings} />
         <div class="policy-reading">
-            <article class="prose policy-prose"><slot /></article>
+            <article class="prose"><slot /></article>
             <a class="policy-back policy-back--bottom" href={withBase('/gather-bot')}>← 다른 정책·지원 안내 보기</a>
         </div>
     </div>

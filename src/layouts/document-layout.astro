@@ -1,7 +1,7 @@
 ---
 import BaseLayout from './base-layout.astro';
+import DocumentHeader from '../components/document-header.astro';
 import DocumentToc from '../components/document-toc.astro';
-import { withBase } from '../lib/site';
 
 interface Props {
     status?: 'draft' | 'active' | 'archived';
@@ -9,6 +9,8 @@ interface Props {
     description: string;
     label: string;
     updatedAt: Date;
+    publishedAt?: Date;
+    version?: string;
     showSidebar?: boolean;
     headings?: DocumentHeading[];
 }
@@ -19,33 +21,13 @@ interface DocumentHeading {
     text: string;
 }
 
-const { status = 'active', title, description, label, updatedAt, showSidebar = true, headings = [] } = Astro.props;
-const formattedDate = new Intl.DateTimeFormat('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-}).format(updatedAt);
+const { status = 'active', title, description, label, updatedAt, publishedAt, version, showSidebar = true, headings = [] } = Astro.props;
 const sectionHeadings = headings.filter((heading) => heading.depth === 2);
 const showTableOfContents = showSidebar && sectionHeadings.length > 0;
 ---
 
 <BaseLayout title={title} description={description} noindex={status === 'draft'}>
-    <section class="doc-hero">
-        <div class="container doc-hero__inner">
-            <a class="eyebrow-link" href={withBase('/')}>OWKR 내전 운영 가이드</a>
-            <div class="doc-hero__heading">
-                <div>
-                    <p class="eyebrow">{label}</p>
-                    <h1>{title}</h1>
-                    <p class="doc-hero__description">{description}</p>
-                </div>
-            </div>
-            <div class="doc-meta" aria-label="문서 정보">
-                {status === 'draft' && <strong>검토 중 초안 · 시행일 미정</strong>}
-                <span>최종 수정일: {formattedDate}</span>
-            </div>
-        </div>
-    </section>
+    <DocumentHeader {title} {description} {label} {status} {version} {publishedAt} {updatedAt} />
 
     <div
         class:list={[

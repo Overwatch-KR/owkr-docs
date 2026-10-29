@@ -2,7 +2,7 @@
 title: 시간을달리는소녀 정책·지원
 description: 시간을달리는소녀의 이용약관, 개인정보처리방침, 문의·삭제 요청 안내를 한곳에서 확인하세요.
 label: 시간을달리는소녀 정책·지원
-version: '1.1'
+version: '1.2'
 publishedAt: 2026-10-27
 updatedAt: 2026-10-28
 status: active

@@ -1,8 +1,4 @@
-export {};
-
-const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
-const ANIMATION_DURATION = 240;
-const ANIMATION_EASING = 'cubic-bezier(0.22, 1, 0.36, 1)';
+import { motionOptions, prefersReducedMotion } from '../lib/motion';
 const runningAnimations = new WeakMap<HTMLDetailsElement, Animation>();
 
 const finishAnimation = (details: HTMLDetailsElement, isOpen: boolean) => {
@@ -16,7 +12,6 @@ const finishAnimation = (details: HTMLDetailsElement, isOpen: boolean) => {
 const toggleDetails = (
     details: HTMLDetailsElement,
     summary: HTMLElement,
-    content: HTMLElement,
 ) => {
     if (runningAnimations.has(details)) {
         return;
@@ -24,7 +19,7 @@ const toggleDetails = (
 
     const isOpening = !details.open;
 
-    if (window.matchMedia(REDUCED_MOTION_QUERY).matches) {
+    if (prefersReducedMotion()) {
         details.open = isOpening;
         return;
     }
@@ -36,7 +31,9 @@ const toggleDetails = (
     }
 
     details.dataset.motionState = isOpening ? 'opening' : 'closing';
-    const endHeight = summary.offsetHeight + (isOpening ? content.offsetHeight : 0);
+    const styles = getComputedStyle(details);
+    const borders = Number.parseFloat(styles.borderTopWidth) + Number.parseFloat(styles.borderBottomWidth);
+    const endHeight = isOpening ? details.offsetHeight : summary.offsetHeight + borders;
 
     details.style.height = `${startHeight}px`;
     details.style.overflow = 'clip';
@@ -45,10 +42,7 @@ const toggleDetails = (
         {
             height: [`${startHeight}px`, `${endHeight}px`],
         },
-        {
-            duration: ANIMATION_DURATION,
-            easing: ANIMATION_EASING,
-        },
+        motionOptions(),
     );
 
     runningAnimations.set(details, animation);
@@ -68,9 +62,9 @@ const openHashTarget = () => {
     }
 };
 
-document.querySelectorAll<HTMLDetailsElement>('.faq-item').forEach((details) => {
+document.querySelectorAll<HTMLDetailsElement>('[data-accordion]').forEach((details) => {
     const summary = details.querySelector<HTMLElement>('summary');
-    const content = details.querySelector<HTMLElement>('.faq-item__answer');
+    const content = details.querySelector<HTMLElement>('[data-accordion-content]');
 
     if (!summary || !content) {
         return;
@@ -78,7 +72,7 @@ document.querySelectorAll<HTMLDetailsElement>('.faq-item').forEach((details) => 
 
     summary.addEventListener('click', (event) => {
         event.preventDefault();
-        toggleDetails(details, summary, content);
+        toggleDetails(details, summary);
     });
 });
 
