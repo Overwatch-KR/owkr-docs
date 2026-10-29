@@ -1,6 +1,6 @@
 ---
 document: privacy
-publishedAt: 2026-10-29
+publishedAt: 2026-10-28
 order: 60
 label: 국외 처리 범위 보완 전 공개 문서
 status: draft
