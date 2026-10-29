@@ -1612,3 +1612,9 @@ body.faq-assistant-open {
 .document-navigation a[aria-current] { color: var(--accent); text-decoration: underline; }
 .document-header__copy { flex: 1; }
 .doc-hero h1 { overflow-wrap: anywhere; word-break: keep-all; }
+
+.faq-assistant__footer { gap: 1rem; flex-wrap: wrap; }
+.faq-assistant__body { overscroll-behavior: contain; }
+
+.faq-item__answer a, .faq-assistant__answer a { color: var(--accent); text-decoration: underline; text-underline-offset: 0.2em; }
+.faq-item__answer code, .faq-assistant__answer code { color: var(--text); font-size: 0.9em; }

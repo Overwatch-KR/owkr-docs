@@ -1,6 +1,4 @@
 import { motionOptions, prefersReducedMotion } from '../lib/motion';
-const RESPONSE_DELAY_MS = 420;
-const TYPEWRITER_DELAY_MS = 18;
 
 const animateEntrance = (element: HTMLElement, distance = 8) => {
     if (prefersReducedMotion()) {
@@ -75,11 +73,11 @@ const setupFaqAssistant = (root: HTMLElement) => {
         return;
     }
 
+    const background = Array.from(document.querySelectorAll<HTMLElement>('.site-shell > :not(.faq-assistant), body > .skip-link'));
+    const previousInert = new Map<HTMLElement, boolean>();
     let lastFocusedElement: HTMLElement | null = null;
     let selectedCategoryButton: HTMLButtonElement | null = null;
     let selectedQuestionButton: HTMLButtonElement | null = null;
-    let responseTimer: number | null = null;
-    let typewriterTimer: number | null = null;
     let resetTimer: number | null = null;
     let isResponding = false;
 
@@ -148,86 +146,7 @@ const setupFaqAssistant = (root: HTMLElement) => {
         return { content, mascot, message, typing };
     };
 
-    const clearResponseTimer = () => {
-        if (responseTimer === null) {
-            return;
-        }
-
-        window.clearTimeout(responseTimer);
-        responseTimer = null;
-    };
-
-    const clearTypewriterTimer = () => {
-        if (typewriterTimer === null) {
-            return;
-        }
-
-        window.clearTimeout(typewriterTimer);
-        typewriterTimer = null;
-    };
-
-    const typewriteResponse = (content: HTMLElement, onComplete: () => void) => {
-        if (prefersReducedMotion()) {
-            onComplete();
-            return;
-        }
-
-        const textNodes: Array<{ node: Text; characters: string[] }> = [];
-        const walker = document.createTreeWalker(content, NodeFilter.SHOW_TEXT);
-        let textNode = walker.nextNode();
-
-        while (textNode) {
-            const node = textNode as Text;
-            const value = node.nodeValue ?? '';
-
-            if (value.trim()) {
-                textNodes.push({ node, characters: Array.from(value) });
-                node.nodeValue = '';
-            }
-
-            textNode = walker.nextNode();
-        }
-
-        if (textNodes.length === 0) {
-            onComplete();
-            return;
-        }
-
-        content.setAttribute('aria-hidden', 'true');
-        let nodeIndex = 0;
-        let characterIndex = 0;
-
-        const writeNextCharacter = () => {
-            const currentNode = textNodes[nodeIndex];
-
-            if (!currentNode) {
-                typewriterTimer = null;
-                content.removeAttribute('aria-hidden');
-                onComplete();
-                return;
-            }
-
-            const character = currentNode.characters[characterIndex];
-
-            if (character) {
-                currentNode.node.nodeValue = `${currentNode.node.nodeValue ?? ''}${character}`;
-                characterIndex += 1;
-            }
-
-            if (characterIndex >= currentNode.characters.length) {
-                nodeIndex += 1;
-                characterIndex = 0;
-            }
-
-            typewriterTimer = window.setTimeout(writeNextCharacter, TYPEWRITER_DELAY_MS);
-        };
-
-        writeNextCharacter();
-    };
-
     const resetConversation = () => {
-        clearResponseTimer();
-        clearTypewriterTimer();
         resetTimer = null;
         isResponding = false;
         selectedCategoryButton = null;
@@ -264,6 +183,10 @@ const setupFaqAssistant = (root: HTMLElement) => {
         panel.setAttribute('aria-hidden', 'false');
         panel.inert = false;
         document.body.classList.add('faq-assistant-open');
+        background.forEach((element) => {
+            previousInert.set(element, element.inert);
+            element.inert = true;
+        });
 
         window.requestAnimationFrame(() => {
             panel.querySelector<HTMLButtonElement>('[data-assistant-close]')?.focus();
@@ -276,8 +199,8 @@ const setupFaqAssistant = (root: HTMLElement) => {
         panel.setAttribute('aria-hidden', 'true');
         panel.inert = true;
         document.body.classList.remove('faq-assistant-open');
-        clearResponseTimer();
-        clearTypewriterTimer();
+        background.forEach((element) => { element.inert = previousInert.get(element) ?? false; });
+        previousInert.clear();
         isResponding = false;
         conversation.ariaBusy = 'false';
 
@@ -349,27 +272,19 @@ const setupFaqAssistant = (root: HTMLElement) => {
         questionMessage.focus({ preventScroll: true });
         alignQuestionAtTop(questionMessage, response.message);
 
-        responseTimer = window.setTimeout(
-            () => {
-                response.typing.hidden = true;
-                response.content.hidden = false;
-                responseTimer = null;
-                typewriteResponse(response.content, () => {
-                    const successSrc = response.mascot.dataset.successSrc;
+        response.typing.hidden = true;
+        response.content.hidden = false;
+        const successSrc = response.mascot.dataset.successSrc;
 
-                    if (successSrc) {
-                        response.mascot.src = successSrc;
-                    }
-                    followUps.hidden = false;
-                    conversation.append(followUps);
-                    conversation.ariaBusy = 'false';
-                    isResponding = false;
-                    animateEntrance(followUps, 6);
-                    alignQuestionAtTop(questionMessage, response.message);
-                });
-            },
-            prefersReducedMotion() ? 0 : RESPONSE_DELAY_MS,
-        );
+        if (successSrc) {
+            response.mascot.src = successSrc;
+        }
+        followUps.hidden = false;
+        conversation.append(followUps);
+        conversation.ariaBusy = 'false';
+        isResponding = false;
+        animateEntrance(followUps, 6);
+        alignQuestionAtTop(questionMessage, response.message);
     };
 
     const showQuestions = () => {

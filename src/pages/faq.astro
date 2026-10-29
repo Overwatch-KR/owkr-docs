@@ -1,10 +1,11 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { FAQ_CATEGORIES } from '../lib/faq';
 import DocumentHeader from '../components/document-header.astro';
 import DocumentToc from '../components/document-toc.astro';
 import BaseLayout from '../layouts/base-layout.astro';
 
-const categoryOrder = ['참가', '게임 진행', '커뮤니케이션', '경고와 제재'] as const;
+
 const entries = (await getCollection('faq')).sort((a, b) => a.data.order - b.data.order);
 const items = await Promise.all(
     entries.map(async (entry) => {
@@ -32,19 +33,19 @@ const faqSchema = {
     description="OWKR 내전 규칙에서 헷갈리기 쉬운 상황을 질문과 답변으로 설명합니다."
 >
     <script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
-    <DocumentHeader title="자주 묻는 질문" description="규칙의 경계가 애매할 때 먼저 확인해 주세요. 답변을 눌러 자세한 내용을 볼 수 있습니다." label="자주 묻는 질문" />
+    <DocumentHeader title="자주 묻는 질문" description="규칙의 경계가 애매할 때 먼저 확인해 주세요. 답변을 눌러 자세한 내용을 볼 수 있습니다." label="OWKR 내전 가이드" />
     <div class="container document-grid">
-        <DocumentToc headings={categoryOrder.map((category) => ({ depth: 2, slug: category, text: category }))} />
+        <DocumentToc headings={FAQ_CATEGORIES.map((category) => ({ depth: 2, slug: category, text: category }))} />
 
         <div class="faq-groups">
             {
-                categoryOrder.map((category) => {
+                FAQ_CATEGORIES.map((category) => {
                     const categoryItems = items.filter((item) => item.entry.data.category === category);
 
                     return (
                         <section class="faq-group" aria-labelledby={category}>
                             <div class="faq-group__heading">
-                                <p class="eyebrow">CATEGORY</p>
+                                <p class="eyebrow">자주 묻는 질문</p>
                                 <h2 id={category}>{category}</h2>
                             </div>
                             <div class="faq-list">
