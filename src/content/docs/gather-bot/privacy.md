@@ -2,17 +2,17 @@
 title: 시간을달리는소녀 개인정보처리방침
 description: 시간을달리는소녀의 개인정보처리방침입니다. 현재 검토 중인 초안입니다.
 label: 시간을달리는소녀 정책 · 검토 중 초안
-version: '0.4'
+version: '0.5'
 publishedAt: 2026-10-27
-changeSummary: "로그·백업·문의 자료의 보관 기한과 국내 Mac 보관·FileVault·문의 경로 확인을 반영했습니다. 국외 이전 등 최종 고지는 검토 중입니다."
-updatedAt: 2026-10-28
+changeSummary: "개인 운영과 Oracle의 저장·지원 접근, Gmail의 국외 처리 범위를 구분했습니다. 이전 근거·적용 계약·세부 고지는 검토 중이며 시행 상태는 바꾸지 않았습니다."
+updatedAt: 2026-10-29
 status: draft
 ---
 
 > 검토 중 초안 — 실제 배포 환경을 반영했습니다. 보관 기한·문의 경로는 확정했습니다. 국외 이전 근거·수탁자 계약·법정 표시 사항의 최종 확인이 남아 있습니다.
 > 이 문서의 게시만으로 개인정보 수집·국외 이전에 대한 동의가 성립하지 않습니다.
 
-최종 검토일: 2026-10-28 · 시행일: 미정
+최종 검토일: 2026-10-29 · 시행일: 미정
 
 ## 운영 주체
 
@@ -20,7 +20,7 @@ status: draft
 - 개인정보 문의·열람·수정·삭제·처리정지 요청: [qtaghdi@gmail.com](mailto:qtaghdi@gmail.com)
 - 보조 연락 경로: Discord `qtaghdi`에게 비공개 메시지
 
-봇과 데이터 처리의 운영 담당은 qtaghdi입니다. 서버 총관리자는 서버 운영과
+이 봇은 qtaghdi가 개인 운영하며, 봇과 데이터 처리의 운영 담당도 qtaghdi입니다. 서버 총관리자는 서버 운영과
 역할·채널 권한 관련 사항에 협조하며, 이 표시는 서버 전체의 개인정보 처리
 책임을 봇 담당자에게 일괄 이전한다는 의미가 아닙니다.
 
@@ -61,7 +61,7 @@ status: draft
 Discord의 공개 메시지와 봇 DB의 저장 정보는 서로 다릅니다.
 
 현재 외부 매치 서비스나 AI 모델로 티어 정보를 자동 전송하지 않습니다.
-2026-10-28에 확인한 처리 환경은 다음과 같습니다.
+2026-10-29에 대조한 처리 환경은 다음과 같습니다.
 
 | 구분 | 처리 환경과 범위 |
 | --- | --- |
@@ -72,10 +72,26 @@ Discord의 공개 메시지와 봇 DB의 저장 정보는 서로 다릅니다.
 | 공개 안내 웹 | GitHub Pages. 정책·문의 안내만 게시하며 DB·설정·백업은 배포하지 않음 |
 | 문의 이메일 | Google Gmail의 qtaghdi@gmail.com. 발신 주소와 요청 본문을 처리하며 봇 DB와 별개 |
 
-Mac의 한국 보관·FileVault 사용과 이메일·Discord DM 수신 가능 여부는 운영 담당자가 확인했습니다. 제공자와 체결한 계약상 수탁자 정보 및 문의 이메일 처리 위치는 최종 확인 대상입니다. 일본 리전 보관 사실을 국내 보관으로
-표현하지 않습니다. 국외 이전의 적용 근거·이전 항목·받는 자·시점과 방법·보유 기간·
-연락처·거부 방법 등의 고지를 확인하고, 필요한 동의·안내 절차를 별도로 갖춰야 합니다.
-단순한 서버 생성이나 이 초안 공개가 그 절차를 대신하지 않습니다.
+Mac의 한국 보관·FileVault 사용과 이메일·Discord DM 수신 가능 여부는 운영 담당자가 확인했습니다.
+위 표의 일본 도쿄는 봇 DB와 VM 내부 백업의 저장 위치이며 모든 제공자의 처리 위치를
+일본으로 한정한다는 뜻은 아닙니다.
+
+### 제공자별 국외 처리 범위
+
+- **Oracle:** 선택한 VM의 저장 위치는 일본 도쿄입니다. Oracle의 공개 계약에는
+  서비스 지원·사고 대응·복구를 위해 다른 국가에서 정보에 접근할 수 있는 조항이 있습니다.
+  저장 위치와 지원 과정의 접근 범위는 구분합니다.
+  [Oracle의 개인정보 처리 계약 제5·6조](https://www.oracle.com/contracts/docs/data-processing-agreement-oracle-services-081425.pdf)
+- **Gmail:** 문의 메일은 개인 Gmail 계정에서 처리합니다. Google은 세계 여러 국가의
+  서버를 이용한다고 안내합니다. 문의 메일의 처리 위치는 일본 VM과 별개입니다.
+  [Google 개인정보처리방침](https://policies.google.com/privacy?hl=ko)
+- **플랫폼 자체 처리:** Oracle의 클라우드 계정·시스템 운영 정보와
+  Discord·Google·GitHub의 자체 서비스 정보 처리는 봇 DB와 구분합니다.
+  [Oracle의 한국 대상 계정 정보 안내](https://www.oracle.com/legal/data-protection-authority/)
+
+국외 이전의 법적 근거, 이전 항목·받는 자와 연락처·국가·시점과 방법·목적·보유 기간·
+거부 방법과 효과의 최종 고지는 아직 검토 중입니다. 이 초안의 게시나 일반 참가 반응을
+국외 이전의 별도 동의로 간주하지 않습니다.
 
 공개 웹에는 별도 접수 폼·광고·분석 스크립트·외부 폰트를 넣지 않습니다. GitHub 등
 제공자가 접속 IP 등 서비스 운영 정보를 처리할 수 있는 사항은 제공자의 정책과
@@ -118,6 +134,8 @@ OWKR Docs는 화면 테마 선택을 브라우저 로컬 저장소(`owkr-theme`)
 백업 정리에서 잘못된 생성 기록·링크 등 오류가 발견되면 삭제를 멈추고 담당자가
 확인합니다. 복사 실패로 남은 미완성 백업도 담당자가 확인해 같은 보관 기준으로
 정리합니다. 정리 작업 중단·실패는 다음 가동 시 재시도하고 수동 점검합니다.
+이 표는 운영 담당자가 관리하는 자료의 보관 기준입니다. 제공자의 자체 계정·시스템 운영
+정보 보관은 각 제공자의 정책에 따릅니다.
 DB 행 삭제만으로 디스크의 잔여 데이터까지 복원 불가능하게 제거됐다고 안내하지 않습니다.
 
 Discord 메시지 삭제는 전체 개인정보 삭제와 다릅니다. 시작 전 조건에 맞는 삭제
@@ -151,6 +169,6 @@ qtaghdi이며, 필요한 이용자·제공자·관계 기관 통지의 범위와
 따라 별도 검토합니다.
 
 검토 근거: [Discord 개발자 약관](https://support-dev.discord.com/hc/en-us/articles/8562894815383-Discord-Developer-Terms-of-Service),
-[개인정보 보호법 제30조](https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029332499),
-[개인정보 보호법 제28조의8](https://law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1029334951),
+[개인정보 보호법 제30조](https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=00&joNo=0030&lsiSeq=283839&urlMode=lsScJoRltInfoR),
+[개인정보 보호법 제28조의8](https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=08&joNo=0028&lsiSeq=283839&urlMode=lsScJoRltInfoR),
 [GitHub 개인정보 안내](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
