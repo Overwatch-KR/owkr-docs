@@ -1,21 +1,21 @@
 ---
-import type { DiffLine } from '../lib/policy-diff';
+import type { MarkdownDiffBlock } from '../lib/policy-markdown-diff';
 interface Props {
     title: string;
-    lines: (DiffLine | null)[];
+    lines: (MarkdownDiffBlock | null)[];
 }
 const { title, lines } = Astro.props;
 ---
 <div class="policy-diff" role="region" aria-label={`${title} 변경 문구 비교`} tabindex="0">
     <table>
-        <caption>이전·이후 행 번호와 변경 문구 · 원문 Markdown 표시</caption>
+        <caption>서식이 적용된 문구 · 번호는 이전·이후 원문의 행 범위</caption>
         <colgroup><col class="policy-diff-number-column" /><col class="policy-diff-number-column" /><col class="policy-diff-kind-column" /><col /></colgroup>
         <thead><tr><th scope="col">이전</th><th scope="col">이후</th><th scope="col">변경</th><th scope="col">문구</th></tr></thead>
         <tbody>{lines.map((line) => line === null ? <tr><td colspan="4" class="policy-diff-gap">⋯ 동일한 문구 생략</td></tr> : <tr class={`policy-diff-line--${line.kind}`}>
             <td class="policy-diff-number">{line.before ?? '—'}</td>
             <td class="policy-diff-number">{line.after ?? '—'}</td>
             <td class="policy-diff-kind">{line.kind === 'added' ? '+ 추가' : line.kind === 'removed' ? '− 삭제' : '동일'}</td>
-            <td class="policy-diff-text">{line.text || ' '}</td>
+            <td class="policy-diff-text"><div class="policy-diff-markdown" set:html={line.html} /></td>
         </tr>)}</tbody>
     </table>
 </div>

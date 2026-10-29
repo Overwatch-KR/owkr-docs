@@ -7,6 +7,7 @@ import DocumentToc from '../../components/document-toc.astro';
 import { withBase } from '../../lib/site';
 import { getPolicyDocuments, formatPolicyDate } from '../../lib/policies';
 import { diffPolicyLines, policyDiffContext } from '../../lib/policy-diff';
+import { diffPolicyMarkdown } from '../../lib/policy-markdown-diff';
 import '../../styles/policy.css';
 
 const documents = await getPolicyDocuments();
@@ -27,12 +28,12 @@ const groups = documents.map((document) => {
     return { ...document, revisions: revisions.map((revision, index) => {
         const previous = revisions[index - 1];
         const diff = diffPolicyLines(previous?.body ?? '', revision.body);
-        return { ...revision, previous: previous?.label ?? '공개 이전', lines: policyDiffContext(diff), added: diff.filter((line) => line.kind === 'added').length, removed: diff.filter((line) => line.kind === 'removed').length };
+        return { ...revision, previous: previous?.label ?? '공개 이전', lines: policyDiffContext(diffPolicyMarkdown(previous?.body ?? '', revision.body)), added: diff.filter((line) => line.kind === 'added').length, removed: diff.filter((line) => line.kind === 'removed').length };
     }).reverse() };
 });
 ---
 <BaseLayout title="시간을달리는소녀 문서 변경 이력" description="봇 정책의 발행 기록과 이전 문구·바뀐 문구를 비교합니다." noindex section="bot">
-    <DocumentHeader title="문서 변경 이력" description="언제, 어떤 내용이 바뀌었는지 이전 공개 문서와 비교하세요." label="시간을달리는소녀" publishedAt={new Date('2026-10-28')} updatedAt={new Date('2026-10-28')}>
+    <DocumentHeader title="문서 변경 이력" description="언제, 어떤 내용이 바뀌었는지 이전 공개 문서와 비교하세요." label="시간을달리는소녀" publishedAt={new Date('2026-10-28')} updatedAt={new Date(Math.max(...documents.map((document) => document.entry.data.updatedAt.getTime())))}>
     </DocumentHeader>
     <div class="container document-grid">
         <DocumentToc headings={groups.map((group) => ({ depth: 2, slug: group.slug, text: group.title }))} />
@@ -41,7 +42,7 @@ const groups = documents.map((document) => {
             {groups.map((group) => <section class="policy-history-group" id={group.slug} aria-labelledby={`history-${group.slug}`}>
                 <div class="policy-section-heading"><h2 id={`history-${group.slug}`}>{group.title}</h2><a href={withBase(`/gather-bot/${group.slug}`)}>현재 문서 읽기 ↗</a></div>
                 {group.revisions.map((revision, index) => <details data-accordion class="policy-revision" open={index === 0}>
-                    <summary><span><time datetime={revision.date.toISOString()}>{formatPolicyDate(revision.date)}</time><strong>{revision.label}</strong>{revision.status === 'draft' && <span class="policy-revision__stage">{index === 0 ? '검토 중' : '당시 초안'}</span>}</span><span class="policy-diff-count"><span>+{revision.added}줄</span><span>−{revision.removed}줄</span></span></summary>
+                    <summary><span><time datetime={revision.date.toISOString()}>{formatPolicyDate(revision.date)}</time><strong>{revision.label}</strong>{revision.status === 'draft' && <span class="policy-revision__stage">{index === 0 ? '검토 중' : '당시 초안'}</span>}</span><span class="policy-diff-count"><span>+{revision.added}줄</span><span>−{revision.removed}줄</span></span><span class="accordion-toggle" aria-hidden="true" /></summary>
                     <div data-accordion-content>
                     <div class="policy-revision__intro"><p>{revision.summary}</p><small>{revision.previous} → {revision.label}</small><a href={revision.sourceUrl}>공개 원문 기록 ↗</a></div>
                     {revision.added + revision.removed === 0 ? <p class="policy-diff-empty">본문 변경 없음 · 명칭·문서 정보·화면 표시를 정리했습니다.</p> : <PolicyDiff title={group.title} lines={revision.lines} />}

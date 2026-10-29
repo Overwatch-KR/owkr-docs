@@ -11,9 +11,18 @@ importers:
       '@astrojs/check':
         specifier: ^0.9.4
         version: 0.9.10(prettier@3.9.6)(typescript@5.9.3)
+      '@astrojs/markdown-satteri':
+        specifier: 0.3.5
+        version: 0.3.5
       astro:
         specifier: ^7.1.5
         version: 7.1.5(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.3)(yaml@2.9.0)
+      github-slugger:
+        specifier: 2.0.0
+        version: 2.0.0
+      satteri:
+        specifier: 0.9.5
+        version: 0.9.5
       sharp:
         specifier: ^0.35.5
         version: 0.35.5

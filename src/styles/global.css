@@ -799,15 +799,15 @@ main {
     outline-offset: -2px;
 }
 
-.faq-item__toggle {
+.accordion-toggle {
     position: relative;
     width: 0.9rem;
     height: 0.9rem;
     flex: 0 0 auto;
 }
 
-.faq-item__toggle::before,
-.faq-item__toggle::after {
+.accordion-toggle::before,
+.accordion-toggle::after {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -819,15 +819,15 @@ main {
     transition: transform var(--motion-fast) var(--motion-easing);
 }
 
-.faq-item__toggle::after {
+.accordion-toggle::after {
     transform: translate(-50%, -50%) rotate(90deg);
 }
 
-.faq-item[open] .faq-item__toggle::after {
+[data-accordion][open] .accordion-toggle::after {
     transform: translate(-50%, -50%) rotate(0);
 }
 
-.faq-item[open][data-motion-state='closing'] .faq-item__toggle::after {
+[data-accordion][open][data-motion-state='closing'] .accordion-toggle::after {
     transform: translate(-50%, -50%) rotate(90deg);
 }
 
