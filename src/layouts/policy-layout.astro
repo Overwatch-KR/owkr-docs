@@ -2,7 +2,6 @@
 import DocumentHeader from '../components/document-header.astro';
 import BaseLayout from './base-layout.astro';
 import DocumentToc from '../components/document-toc.astro';
-import PolicyNavigation from '../components/policy-navigation.astro';
 import { withBase } from '../lib/site';
 import { POLICY_LINKS } from '../lib/policies';
 import '../styles/policy.css';
@@ -22,7 +21,6 @@ const shortTitle = POLICY_LINKS.find((link) => link.slug === slug)?.title ?? tit
 ---
 <BaseLayout title={title} description={description} noindex={status === 'draft'} section="bot">
     <DocumentHeader title={shortTitle} {description} label="시간을달리는소녀" {status} {version} {publishedAt} {updatedAt} historyHref={withBase(`/gather-bot/changes#${slug}`)}>
-        <PolicyNavigation slot="navigation" current={slug} />
     </DocumentHeader>
     <div class="container document-grid">
         <DocumentToc headings={headings} />

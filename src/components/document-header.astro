@@ -10,18 +10,20 @@ interface Props {
     publishedAt?: Date;
     updatedAt?: Date;
     historyHref?: string;
-    showHomeLink?: boolean;
 }
-const { title, description, label, status, version, publishedAt, updatedAt, historyHref, showHomeLink = true } = Astro.props;
-const statusLabel = status === 'draft' ? '검토 중 초안' : status === 'archived' ? '이전 문서' : '확정본';
+const { title, description, label, version, publishedAt, updatedAt, historyHref } = Astro.props;
+const isBotPage = Astro.url.pathname.includes('/gather-bot');
 ---
 <section class="doc-hero">
     <div class="container doc-hero__inner">
-        {Astro.slots.has('navigation') ? <slot name="navigation" /> : showHomeLink && <a class="eyebrow-link" href={withBase('/')}>OWKR 내전 가이드</a>}
+        <nav class="document-navigation" aria-label="안내 홈 선택">
+            <a href={withBase('/')} aria-current={!isBotPage ? 'location' : undefined}>내전 가이드</a>
+            <a href={withBase('/gather-bot')} aria-current={isBotPage ? 'location' : undefined}>봇 정책·지원</a>
+        </nav>
         <header class="document-header">
             <div class="document-header__intro">
                 <div class="document-header__copy">
-                    <div class="document-header__label"><p class="eyebrow">{label}</p>{status && <span class:list={['document-status', { 'document-status--draft': status === 'draft' }]}>{statusLabel}</span>}</div>
+                    <div class="document-header__label"><p class="eyebrow">{label.split(' · ')[0]}</p></div>
                     <h1>{title}</h1>
                     <p class="doc-hero__description">{description}</p>
                 </div>
