@@ -100,3 +100,5 @@
     .policy-diff-kind-column { width: 3rem; }
     .policy-diff th, .policy-diff td { padding: 0.4rem 0.25rem; }
 }
+
+.policy-heading-number { color: var(--text-muted); font-size: 0.8em; font-variant-numeric: tabular-nums; margin-right: 0.35em; }
