@@ -136,6 +136,7 @@ main {
 }
 
 .home-index h2,
+.home-index h3,
 .doc-hero h1,
 .prose h2,
 .prose h3,
@@ -427,25 +428,24 @@ main {
     align-items: center;
     justify-content: space-between;
     gap: 2rem;
-    padding: 1.5rem 0;
+    padding: 1.2rem 0;
     border-bottom: 1px solid var(--line);
     transition: color var(--motion-fast) var(--motion-easing);
 }
 
 .home-index__link:hover,
-.home-index__link:focus-visible {
-    color: var(--accent);
-}
+.home-index__link:focus-visible { color: var(--accent); }
+.home-index__link:hover h3, .home-index__link:focus-visible h3 { text-decoration: underline; text-underline-offset: 0.25em; }
 
-.home-index__link h2 {
+.home-index__link h3 {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 0.98rem;
     letter-spacing: -0.025em;
 }
 
 .home-index__link p {
     margin: 0.45rem 0 0;
-    font-size: 0.9rem;
+    font-size: 0.82rem;
     line-height: 1.7;
     color: var(--text-muted);
 }
@@ -454,6 +454,26 @@ main {
     flex: 0 0 auto;
     font-size: 1.15rem;
     color: var(--accent);
+}
+
+
+.home-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3rem; }
+.home-group { min-width: 0; }
+.home-group__heading { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+.home-group__heading h2 { margin: 0; font-size: 1.25rem; line-height: 1.5; letter-spacing: -0.035em; }
+.home-group__heading p { margin: 0.35rem 0 0; color: var(--text-muted); font-size: 0.8rem; line-height: 1.7; word-break: keep-all; }
+.home-group__symbol { display: grid; place-items: center; flex: 0 0 48px; width: 48px; height: 48px; overflow: hidden; border-radius: 50%; background: var(--accent-soft); color: var(--accent); }
+.home-group__symbol img { display: block; width: 48px; height: 48px; }
+.home-group__symbol svg { width: 28px; height: 28px; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; }
+.home-history { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 1rem; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+.home-history h2 { margin: 0; font-size: 0.85rem; color: var(--text-muted); }
+.home-history nav { display: flex; flex-wrap: wrap; gap: 0.8rem 1.75rem; }
+.home-history a { font-size: 0.8rem; color: var(--text-soft); text-underline-offset: 0.3em; }
+.home-history a:hover, .home-history a:focus-visible { color: var(--accent); text-decoration: underline; }
+@media (max-width: 760px) {
+    .home-groups { grid-template-columns: 1fr; gap: 2.75rem; }
+    .home-group__heading { margin-bottom: 1rem; }
+    .home-history { margin-top: 2.5rem; }
 }
 
 .doc-hero {

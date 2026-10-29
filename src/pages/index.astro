@@ -1,49 +1,69 @@
 ---
+import { Image } from 'astro:assets';
+import botIcon from '../assets/bot-icon.png';
 import DocumentHeader from '../components/document-header.astro';
 import BaseLayout from '../layouts/base-layout.astro';
 import { withBase } from '../lib/site';
 
-const sections = [
+const groups = [
     {
-        title: '내전 규칙',
-        description: '허용되는 플레이와 금지되는 행동, 경고 기준을 확인합니다.',
-        href: '/rules',
+        id: 'scrim',
+        title: '내전 안내',
+        description: '참가 준비부터 함께 지켜야 할 규칙까지',
+        links: [
+            { title: '참가 안내', description: '신청·티어 작성·입장 순서를 확인하세요.', href: '/participation' },
+            { title: '내전 공통 규칙', description: '플레이와 소통, 경고 기준을 확인하세요.', href: '/rules' },
+            { title: '자주 묻는 질문', description: '헷갈리는 상황을 사례로 살펴보세요.', href: '/faq' },
+            { title: '참가자 개인정보 안내', description: '명단·팀 밸런스 정보의 처리 기준입니다.', href: '/participant-privacy' },
+        ],
     },
     {
-        title: '자주 묻는 질문',
-        description: '포커싱, 전술 콜, 밸런스 의견처럼 애매한 상황을 사례로 설명합니다.',
-        href: '/faq',
-    },
-    {
-        title: '참가 안내',
-        description: '신청부터 배틀태그 작성, 초대 설정, 불참 연락까지 한 번에 확인합니다.',
-        href: '/participation',
-    },
-    {
-        title: '시간을달리는소녀 정책·지원',
-        description: '내전 운영 봇의 이용약관, 개인정보처리방침과 문의 방법을 확인합니다.',
-        href: '/gather-bot',
+        id: 'bot',
+        title: '시간을달리는소녀',
+        description: '봇 사용법부터 이용 정책과 문의까지',
+        links: [
+            { title: '봇 사용법', description: '참가·대기·취소·티어 삭제 방법을 확인하세요.', href: '/faq#봇 사용' },
+            { title: '이용약관', description: '봇 이용 조건과 운영 기준을 확인하세요.', href: '/gather-bot/terms' },
+            { title: '개인정보처리방침', description: '봇이 처리하는 정보와 보관·삭제 기준입니다.', href: '/gather-bot/privacy' },
+            { title: '문의·삭제 요청', description: '오류 신고와 내 정보에 관한 요청을 안내합니다.', href: '/gather-bot/support' },
+        ],
     },
 ];
 ---
 
 <BaseLayout>
-    <DocumentHeader title="내전 운영 문서" label="OWKR 내전 가이드" description="규칙, 참가 절차, 자주 묻는 질문을 확인하세요." />
-    <section class="home-index">
+    <DocumentHeader title="OWKR 문서" label="OWKR 안내" description="내전 참가와 봇 이용에 필요한 안내를 한곳에서 확인하세요." />
+    <div class="home-index">
         <div class="container home-index__inner">
-            <nav class="home-index__links" aria-label="문서 바로가기">
-                {
-                    sections.map((section) => (
-                        <a class="home-index__link" href={withBase(section.href)}>
-                            <div>
-                                <h2>{section.title}</h2>
-                                <p>{section.description}</p>
-                            </div>
-                            <span aria-hidden="true">→</span>
-                        </a>
-                    ))
-                }
-            </nav>
+            <div class="home-groups">
+                {groups.map((group) => (
+                    <section class="home-group" aria-labelledby={`home-${group.id}`}>
+                        <header class="home-group__heading">
+                            <span class="home-group__symbol" aria-hidden="true">
+                                {group.id === 'bot'
+                                    ? <Image src={botIcon} alt="" width={48} height={48} format="webp" />
+                                    : <svg viewBox="0 0 32 32" fill="none"><path d="M16 8c-4-3-8-3-12-1v18c4-2 8-2 12 1 4-3 8-3 12-1V7c-4-2-8-2-12 1Zm0 0v18" /></svg>}
+                            </span>
+                            <div><h2 id={`home-${group.id}`}>{group.title}</h2><p>{group.description}</p></div>
+                        </header>
+                        <nav class="home-index__links" aria-label={`${group.title} 문서`}>
+                            {group.links.map((link) => (
+                                <a class="home-index__link" href={withBase(link.href)}>
+                                    <div><h3>{link.title}</h3><p>{link.description}</p></div>
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                            ))}
+                        </nav>
+                    </section>
+                ))}
+            </div>
+            <section class="home-history" aria-labelledby="home-history-title">
+                <h2 id="home-history-title">변경 이력</h2>
+                <nav aria-label="문서 변경 이력">
+                    <a href={withBase('/gather-bot/changes')}>봇 정책 변경 내용 비교 <span aria-hidden="true">→</span></a>
+                    <a href="https://github.com/Overwatch-KR/owkr-docs/blob/main/CHANGELOG.md">전체 문서 업데이트 <span aria-hidden="true">↗</span></a>
+                </nav>
+            </section>
         </div>
-    </section>
+    </div>
 </BaseLayout>
