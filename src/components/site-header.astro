@@ -12,9 +12,9 @@ interface NavigationItem {
 
 const { currentPath } = Astro.props;
 const navigation: NavigationItem[] = [
-    { href: '/rules', label: '내전 규칙' },
-    { href: '/faq', label: 'FAQ' },
     { href: '/participation', label: '참가 안내' },
+    { href: '/rules', label: '내전 공통 규칙' },
+    { href: '/faq', label: 'FAQ' },
     { href: '/gather-bot', label: '봇 정책·지원' },
 ];
 const isActive = (href: string) => {
