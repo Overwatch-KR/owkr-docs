@@ -7,6 +7,7 @@ import DocumentToc from '../../components/document-toc.astro';
 import { withBase } from '../../lib/site';
 import { getPolicyDocuments, formatPolicyDate } from '../../lib/policies';
 import { diffPolicyLines, policyDiffContext } from '../../lib/policy-diff';
+import { diffPolicyMarkdown } from '../../lib/policy-markdown-diff';
 import '../../styles/policy.css';
 
 const documents = await getPolicyDocuments();
@@ -27,12 +28,12 @@ const groups = documents.map((document) => {
     return { ...document, revisions: revisions.map((revision, index) => {
         const previous = revisions[index - 1];
         const diff = diffPolicyLines(previous?.body ?? '', revision.body);
-        return { ...revision, previous: previous?.label ?? '공개 이전', lines: policyDiffContext(diff), added: diff.filter((line) => line.kind === 'added').length, removed: diff.filter((line) => line.kind === 'removed').length };
+        return { ...revision, previous: previous?.label ?? '공개 이전', lines: policyDiffContext(diffPolicyMarkdown(previous?.body ?? '', revision.body)), added: diff.filter((line) => line.kind === 'added').length, removed: diff.filter((line) => line.kind === 'removed').length };
     }).reverse() };
 });
 ---
 <BaseLayout title="시간을달리는소녀 문서 변경 이력" description="봇 정책의 발행 기록과 이전 문구·바뀐 문구를 비교합니다." noindex section="bot">
-    <DocumentHeader title="문서 변경 이력" description="언제, 어떤 내용이 바뀌었는지 이전 공개 문서와 비교하세요." label="시간을달리는소녀" publishedAt={new Date('2026-10-28')} updatedAt={new Date('2026-10-28')}>
+    <DocumentHeader title="문서 변경 이력" description="언제, 어떤 내용이 바뀌었는지 이전 공개 문서와 비교하세요." label="시간을달리는소녀" publishedAt={new Date('2026-10-28')} updatedAt={new Date(Math.max(...documents.map((document) => document.entry.data.updatedAt.getTime())))}>
     </DocumentHeader>
     <div class="container document-grid">
         <DocumentToc headings={groups.map((group) => ({ depth: 2, slug: group.slug, text: group.title }))} />

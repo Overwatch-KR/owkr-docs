@@ -77,20 +77,20 @@
 .policy-revision__intro small { display: block; color: var(--text-muted); font-size: 0.68rem; line-height: 1.8; }
 .policy-revision__intro a { display: inline-block; margin-top: 0.6rem; color: var(--accent); font-size: 0.7rem; }
 .policy-diff { min-width: 0; }
-.policy-diff table { width: 100%; table-layout: fixed; border-collapse: collapse; color: var(--text-soft); font-size: 0.78rem; line-height: 1.8; }
-.policy-diff caption { padding: 0.8rem 1rem; border-top: 1px solid var(--line); text-align: left; color: var(--text-muted); font-size: 0.72rem; }
+.policy-diff > table { width: 100%; table-layout: fixed; border-collapse: collapse; color: var(--text-soft); font-size: 0.78rem; line-height: 1.8; }
+.policy-diff > table > caption { padding: 0.8rem 1rem; border-top: 1px solid var(--line); text-align: left; color: var(--text-muted); font-size: 0.72rem; }
 .policy-diff-number-column { width: 3rem; }
 .policy-diff-kind-column { width: 3.6rem; }
-.policy-diff th, .policy-diff td { padding: 0.5rem; border-top: 1px solid var(--line); vertical-align: top; }
-.policy-diff th { color: var(--text-muted); background: var(--surface); font-size: 0.7rem; text-align: left; }
-.policy-diff th:nth-child(-n+2) { text-align: center; }
+.policy-diff > table > thead > tr > th, .policy-diff > table > tbody > tr > td { padding: 0.5rem; border-top: 1px solid var(--line); vertical-align: top; }
+.policy-diff > table > thead > tr > th { color: var(--text-muted); background: var(--surface); font-size: 0.7rem; text-align: left; }
+.policy-diff > table > thead > tr > th:nth-child(-n+2) { text-align: center; }
 .policy-diff-line--added { background: color-mix(in srgb, var(--success) 8%, transparent); }
 .policy-diff-line--removed { background: color-mix(in srgb, var(--danger) 9%, transparent); }
 .policy-diff-number { color: var(--text-muted); text-align: center; font-size: 0.7rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .policy-diff-kind { color: var(--text-muted); font-size: 0.7rem; white-space: nowrap; }
 .policy-diff-line--added .policy-diff-kind { color: var(--success); }
 .policy-diff-line--removed .policy-diff-kind { color: var(--danger); }
-.policy-diff-text { white-space: pre-wrap; overflow-wrap: anywhere; word-break: normal; }
+.policy-diff-text { white-space: normal; overflow-wrap: anywhere; word-break: normal; }
 .policy-diff-gap, .policy-diff-empty { padding: 0.7rem 1rem; margin: 0; color: var(--text-muted); background: var(--accent-soft); font-size: 0.72rem; }
 :root[data-theme='light'] .policy-diff-line--removed .policy-diff-kind,
 :root[data-theme='light'] .policy-diff-count > span:last-child { color: #b32340; }
@@ -98,7 +98,20 @@
     .policy-history-banner { align-items: start; flex-direction: column; }
     .policy-diff-number-column { width: 2.2rem; }
     .policy-diff-kind-column { width: 3rem; }
-    .policy-diff th, .policy-diff td { padding: 0.4rem 0.25rem; }
+    .policy-diff > table > thead > tr > th, .policy-diff > table > tbody > tr > td { padding: 0.4rem 0.25rem; }
 }
 
 .policy-heading-number { color: var(--text-muted); font-size: 0.8em; font-variant-numeric: tabular-nums; margin-right: 0.35em; }
+
+.policy-diff-markdown > :first-child { margin-top: 0; }
+.policy-diff-markdown > :last-child { margin-bottom: 0; }
+.policy-diff-markdown p { margin-block: 0.6rem; }
+.policy-diff-markdown :is(h1, h2, h3, h4, h5, h6) { margin-block: 0.8rem 0.4rem; font-size: 1em; color: var(--text); line-height: 1.6; }
+.policy-diff-markdown :is(ul, ol) { margin-block: 0.5rem; padding-left: 1.3rem; }
+.policy-diff-markdown li + li { margin-top: 0.3rem; }
+.policy-diff-markdown a { color: var(--accent); text-decoration: underline; text-underline-offset: 0.2em; }
+.policy-diff-markdown blockquote { margin: 0.5rem 0; padding-left: 0.75rem; border-left: 2px solid var(--text-muted); }
+.policy-diff-markdown pre { max-width: 100%; overflow: auto; padding: 0.5rem; background: var(--surface); }
+.policy-diff-markdown table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; font-size: 0.9em; }
+.policy-diff-markdown :is(th, td) { padding: 0.4rem; border: 1px solid var(--line); text-align: left; min-width: 5rem; }
+.policy-diff-number { white-space: normal; overflow-wrap: anywhere; }

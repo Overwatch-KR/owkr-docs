@@ -33,13 +33,13 @@ export function diffPolicyLines(before: string, after: string): DiffLine[] {
 }
 
 /** @description 변경 주변 문맥을 남기고 긴 동일 구간을 생략 표시로 묶는다. */
-export function policyDiffContext(diff: DiffLine[], context = 2): (DiffLine | null)[] {
+export function policyDiffContext<T extends { kind: DiffLine['kind'] }>(diff: T[], context = 2): (T | null)[] {
     const visible = new Set<number>();
     diff.forEach((line, index) => {
         if (line.kind === 'context') return;
         for (let item = Math.max(0, index - context); item <= Math.min(diff.length - 1, index + context); item++) visible.add(item);
     });
-    const result: (DiffLine | null)[] = [];
+    const result: (T | null)[] = [];
     let skipped = false;
     diff.forEach((line, index) => {
         if (visible.has(index)) {
