@@ -168,8 +168,7 @@ const setupFaqAssistant = (root: HTMLElement) => {
         const response = cloneTemplateRoot(responseTemplate);
         const content = response?.querySelector<HTMLElement>('[data-assistant-response-content]');
         const typing = response?.querySelector<HTMLElement>('[data-assistant-typing]');
-        const skip = response?.querySelector<HTMLButtonElement>('[data-assistant-skip]');
-        if (!response || !content || !typing || !skip) return;
+        if (!response || !content || !typing) return;
         selectedQuestionButton = button;
         const userMessage = appendUserMessage(questionText);
         if (!userMessage) return;
@@ -191,15 +190,13 @@ const setupFaqAssistant = (root: HTMLElement) => {
             const finish = () => {
                 content.removeAttribute('aria-hidden');
                 content.inert = false;
-                const skippedWithFocus = document.activeElement === skip;
-                skip.hidden = true;
+                response.removeAttribute('data-responding');
                 followUps.hidden = false;
                 conversation.append(followUps);
                 conversation.ariaBusy = 'false';
                 isResponding = false;
                 topicsButton.disabled = false;
                 answerWriter = null;
-                if (skippedWithFocus) backButton.focus({ preventScroll: true });
                 scrollConversation();
             };
             if (prefersReducedMotion() || root.dataset.state !== 'open') {
@@ -215,8 +212,6 @@ const setupFaqAssistant = (root: HTMLElement) => {
             }
             content.setAttribute('aria-hidden', 'true');
             content.inert = true;
-            skip.hidden = false;
-            skip.addEventListener('click', () => answerWriter?.complete(), { once: true });
             answerWriter = createAnswerWriter(nodes.map((text) => ({
                 text: text.data,
                 write: (value) => { text.data = value; },

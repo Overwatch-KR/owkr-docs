@@ -169,6 +169,7 @@ const items = await Promise.all(
         <template data-assistant-response-template>
             <div
                 class="faq-assistant__message faq-assistant__message--bot"
+                data-responding
                 data-assistant-turn
             >
                 <FaqAssistantMascot size="small" />
@@ -186,7 +187,6 @@ const items = await Promise.all(
                             <span aria-hidden="true"></span>
                         </div>
                         <div hidden data-assistant-response-content></div>
-                        <button type="button" class="faq-assistant__skip" data-assistant-skip hidden>답변 모두 보기</button>
                     </div>
                 </div>
             </div>
