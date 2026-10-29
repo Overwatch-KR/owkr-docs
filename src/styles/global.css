@@ -1309,7 +1309,7 @@ body.faq-assistant-open {
 }
 
 .site-footer {
-    padding: 3rem 0;
+    padding: 3rem 0 calc(6rem + env(safe-area-inset-bottom));
     color: var(--text-muted);
     border-top: 1px solid var(--line);
 }
